@@ -522,7 +522,6 @@ const T = {
 //  SIDEBAR
 // ═══════════════════════════════════════════════════════════════════════════════
 const NAV_ITEMS = [
-  { key: "dashboard", label: "Dashboard", icon: "dashboard" },
   { key: "prfs", label: "PRFs", icon: "prfs", badge: 2 },
   { key: "vendors", label: "Vendors", icon: "vendors" },
   { key: "orders", label: "Purchase Orders", icon: "orders" },
@@ -631,74 +630,7 @@ function CardHeader({ icon, title, action }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  DASHBOARD PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
-function Dashboard({ prfs, onSelectPrf }) {
-  const stats = [
-    { label: "New PRFs", value: prfs.filter((p) => p.status === "new").length, icon: "prfs", color: "#60a5fa", bg: "#dbeafe" },
-    { label: "Pending Review", value: prfs.filter((p) => p.status === "pending_review").length, icon: "clock", color: "#fb923c", bg: "#ffedd5" },
-    { label: "Vendor Pending", value: prfs.filter((p) => p.status === "vendor_validation" || p.vendorStatus === "new_pending").length, icon: "vendors", color: "#a78bfa", bg: "#ede9fe" },
-    { label: "Approved Today", value: prfs.filter((p) => p.status === "approved").length, icon: "check", color: "#34d399", bg: "#d1fae5" },
-  ];
-  return (
-    <div>
-      {/* Stat cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
-        {stats.map((s) => (
-          <Card key={s.label} style={{ padding: 18 }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-              <div>
-                <div style={{ fontSize: 12, color: T.textSub, fontWeight: 500, marginBottom: 4 }}>{s.label}</div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: T.textMain }}>{s.value}</div>
-              </div>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon name={s.icon} size={20} color={s.color} />
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-      {/* PRF Table */}
-      <Card>
-        <CardHeader icon="prfs" title="PRF List View" />
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: T.bg }}>
-                {["PRF Ref No", "Requester", "Vendor Name", "Vendor Status", "Current Status", "PO Number", "Ageing", "Action"].map((h) => (
-                  <th key={h} style={{ textAlign: "left", padding: "10px 14px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {prfs.map((prf, i) => {
-                const ageing = Math.round((new Date() - new Date(prf.createdAt)) / 86400000);
-                return (
-                  <tr key={prf.id} style={{ background: i % 2 === 0 ? "#fff" : "#fafbfc", borderBottom: `1px solid ${T.cardBorder}`, transition: "background .12s" }} onMouseEnter={(e) => (e.currentTarget.style.background = "#f0f7ff")} onMouseLeave={(e) => (e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafbfc")}>
-                    <td style={{ padding: "11px 14px", fontWeight: 600, color: T.primary }}>{prf.id}</td>
-                    <td style={{ padding: "11px 14px", color: T.textMain }}>{prf.requester}</td>
-                    <td style={{ padding: "11px 14px", color: T.textMain }}>{prf.vendorName}</td>
-                    <td style={{ padding: "11px 14px" }}>
-                      <span style={{ fontSize: 11.5, fontWeight: 600, color: prf.vendorStatus === "existing" ? "#34d399" : "#fb923c" }}>
-                        {prf.vendorStatus === "existing" ? "Existing" : "New – Pending"}
-                      </span>
-                    </td>
-                    <td style={{ padding: "11px 14px" }}><StatusBadge status={prf.status} /></td>
-                    <td style={{ padding: "11px 14px", color: T.textSub, fontSize: 12 }}>{prf.poNumber || "—"}</td>
-                    <td style={{ padding: "11px 14px", color: ageing > 5 ? T.danger : T.textSub, fontWeight: ageing > 5 ? 600 : 400, fontSize: 12 }}>{ageing}d</td>
-                    <td style={{ padding: "11px 14px" }}>
-                      <button onClick={() => onSelectPrf(prf)} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: T.primaryLight, color: T.primary, border: `1px solid ${T.primary}22`, borderRadius: 6, padding: "5px 11px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-                        <Icon name="eye" size={13} color={T.primary} /> View
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
-  );
-}
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  PRFs PAGE  (table + per-row expandable document drawer)
@@ -2142,14 +2074,14 @@ function VRFPage({ prf, onBack }) {
 //  ROOT APP
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState("prfs");
   const [selectedPrf, setSelectedPrf] = useState(null);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [vrfPrf, setVrfPrf] = useState(null);
   const [prfs, setPrfs] = useState(MOCK_PRFS);
   const [vendors, setVendors] = useState(MOCK_VENDORS);
 
-  const pageTitle = { dashboard: "Dashboard", prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", documents: "Documents" };
+  const pageTitle = { prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", documents: "Documents" };
 
   const handleVendorUpdate = (updatedVendor) => {
     setVendors((prev) => prev.map((v) => (v.name === updatedVendor.name ? updatedVendor : v)));
@@ -2161,7 +2093,6 @@ export default function App() {
     if (selectedVendor) return <VendorDetail vendor={selectedVendor} onBack={() => setSelectedVendor(null)} onUpdateVendor={handleVendorUpdate} />;
     if (selectedPrf) return <PRFDetail prf={selectedPrf} onBack={() => setSelectedPrf(null)} onUpdatePrf={(updated) => { setPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p))); setSelectedPrf(updated); }} />;
     switch (page) {
-      case "dashboard": return <Dashboard prfs={prfs} onSelectPrf={setSelectedPrf} />;
       case "prfs": return <PRFsPage prfs={prfs} onSelectPrf={setSelectedPrf} />;
       case "vendors": return <VendorsPage onSelectVendor={setSelectedVendor} />;
       case "orders": return <PurchaseOrdersPage prfs={prfs} />;
@@ -2187,24 +2118,7 @@ export default function App() {
         <main style={{ padding: "24px 28px", paddingTop: T.headerH + 24 }}>
           {renderContent()}
           {/* Quick action: open VRF for new vendor PRF */}
-          {!selectedPrf && !vrfPrf && !selectedVendor && page === "dashboard" && (
-            <div style={{ marginTop: 20 }}>
-              <Card style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fffbeb", border: "1px solid #f6e05e" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "#fef08a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Icon name="alert" size={18} color="#d97706" />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#92400e" }}>VRF / VIF Required for DevTools Inc</div>
-                    <div style={{ fontSize: 12, color: "#78716c" }}>PRF-2526-002 · Vendor not found in SAGE – please submit vendor details</div>
-                  </div>
-                </div>
-                <button onClick={() => setVrfPrf(prfs.find((p) => p.id === "PRF-2526-002"))} style={{ background: "#d97706", color: "#fff", border: "none", borderRadius: 7, padding: "8px 18px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
-                  Submit VRF →
-                </button>
-              </Card>
-            </div>
-          )}
+
         </main>
       </div>
     </div>
