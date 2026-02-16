@@ -577,16 +577,18 @@ function Sidebar({ active, onNav }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  TOP BAR
 // ═══════════════════════════════════════════════════════════════════════════════
-function TopBar({ title }) {
+function TopBar({ title, showSearch = true }) {
   const [search, setSearch] = useState("");
   return (
     <header style={{ position: "fixed", top: 0, left: T.sidebarW, right: 0, height: T.headerH, background: "#fff", borderBottom: `1px solid ${T.cardBorder}`, display: "flex", alignItems: "center", gap: 16, padding: "0 28px", zIndex: 90, boxShadow: "0 1px 4px rgba(0,0,0,.06)" }}>
       <h1 style={{ fontSize: 18, fontWeight: 700, color: T.textMain, margin: 0, flex: "0 1 auto", minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "400px" }}>{title}</h1>
       {/* Search */}
-      <div style={{ flex: 1, maxWidth: 380, position: "relative", marginLeft: 24 }}>
-        <Icon name="search" size={15} color={T.textSub} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)" }} />
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search PRF / PO / Vendor…" style={{ width: "100%", padding: "7px 12px 7px 33px", borderRadius: 7, border: `1px solid ${T.cardBorder}`, fontSize: 13, outline: "none", background: T.bg, color: T.textMain, boxSizing: "border-box" }} />
-      </div>
+      {showSearch && (
+        <div style={{ flex: 1, maxWidth: 380, position: "relative", marginLeft: 24 }}>
+          <Icon name="search" size={15} color={T.textSub} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)" }} />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search PRF / PO / Vendor…" style={{ width: "100%", padding: "7px 12px 7px 33px", borderRadius: 7, border: `1px solid ${T.cardBorder}`, fontSize: 13, outline: "none", background: T.bg, color: T.textMain, boxSizing: "border-box" }} />
+        </div>
+      )}
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 14 }}>
         <button style={{ position: "relative", background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <Icon name="bell" size={20} color={T.textSub} />
@@ -1090,6 +1092,8 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
     } else if (action === "edit") {
       newStatus = "new";
       newHistory.push({ status: "New (Edited)", at: now });
+    } else if (action === "remind") {
+      newHistory.push({ status: "Reminder Sent", at: now });
     }
 
     const updatedPrf = {
@@ -1311,7 +1315,12 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
                   )}
                 </>
               )}
-              {!canEdit && (
+              {prf.vendorStatus !== "existing" && (
+                <button onClick={() => setShowModal("remind")} style={{ background: "#fff", color: T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  <Icon name="mail" size={14} color={T.primary} /> Remind Requester
+                </button>
+              )}
+              {!canEdit && prf.vendorStatus === "existing" && (
                 <div style={{ fontSize: 13, color: T.textSub, textAlign: "center", padding: "12px 0" }}>No actions available for current status.</div>
               )}
               {/* Remarks (mandatory for New actions) */}
@@ -1374,16 +1383,18 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
           <div style={{ background: "#fff", borderRadius: 12, width: 420, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,.2)" }}>
             <h3 style={{ margin: "0 0 6px", fontSize: 17, color: T.textMain }}>
-              {showModal === "approve" ? "Approve PRF" : showModal === "reject" ? "Reject PRF" : showModal === "save" ? "Save & Submit PRF" : "Save Edits"}
+              {showModal === "approve" ? "Approve PRF" : showModal === "reject" ? "Reject PRF" : showModal === "save" ? "Save & Submit PRF" : showModal === "remind" ? "Send Reminder" : "Save Edits"}
             </h3>
             <p style={{ margin: "0 0 14px", fontSize: 13, color: T.textSub }}>
               {showModal === "approve"
                 ? "This will approve the PRF and trigger PO generation."
                 : showModal === "reject"
                   ? "The requester will be notified via email."
-                  : showModal === "save"
-                    ? "PRF will be submitted for vendor validation. You won't be able to edit after submission."
-                    : "Edited details will be saved and status remains Pending Review."}
+                  : showModal === "remind"
+                    ? "A reminder email will be sent to the requester."
+                    : showModal === "save"
+                      ? "PRF will be submitted for vendor validation. You won't be able to edit after submission."
+                      : "Edited details will be saved and status remains Pending Review."}
             </p>
             {showModal !== "save" && !remarks.trim() && <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 7, padding: "8px 12px", fontSize: 12.5, color: "#92400e", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}><Icon name="alert" size={14} color="#92400e" /> Remarks are mandatory.</div>}
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 18 }}>
@@ -1402,7 +1413,7 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
                   cursor: (showModal === "save" || remarks.trim()) ? "pointer" : "not-allowed",
                   opacity: (showModal === "save" || remarks.trim()) ? 1 : 0.5
                 }}>
-                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : showModal === "save" ? "Submit PRF" : "Confirm Edit"}
+                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : showModal === "save" ? "Submit PRF" : showModal === "remind" ? "Send Reminder" : "Confirm Edit"}
               </button>
             </div>
           </div>
@@ -1580,6 +1591,13 @@ function VendorDetail({ vendor, onBack, onUpdateVendor }) {
       });
       setEditing(false);
       setShowModal(null);
+    } else if (action === "remind") {
+      onUpdateVendor({
+        ...vendor,
+        remarks: [...(vendor.remarks || []), { by: "Vivek", at: new Date().toISOString(), text: "Reminder email sent to requester." }]
+      });
+      setShowModal(null);
+      alert("Reminder email sent to requester!");
     }
   };
 
@@ -1712,7 +1730,12 @@ function VendorDetail({ vendor, onBack, onUpdateVendor }) {
                   )}
                 </>
               )}
-              {!canApprove && (
+              {vendor.status === "pending_requester" && (
+                <button onClick={() => setShowModal("remind")} style={{ background: "#fff", color: T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  <Icon name="mail" size={14} color={T.primary} /> Remind Requester
+                </button>
+              )}
+              {!canApprove && vendor.status !== "pending_requester" && (
                 <div style={{ fontSize: 13, color: T.textSub, textAlign: "center", padding: "12px 0" }}>No actions available for current status.</div>
               )}
             </div>
@@ -1772,16 +1795,18 @@ function VendorDetail({ vendor, onBack, onUpdateVendor }) {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
           <div style={{ background: "#fff", borderRadius: 12, width: 420, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,.2)" }}>
             <h3 style={{ margin: "0 0 6px", fontSize: 17, color: T.textMain }}>
-              {showModal === "approve" ? "Approve Vendor" : showModal === "reject" ? "Reject Vendor" : "Save Edits"}
+              {showModal === "approve" ? "Approve Vendor" : showModal === "reject" ? "Reject Vendor" : showModal === "edit" ? "Save Edits" : "Send Reminder"}
             </h3>
             <p style={{ margin: "0 0 14px", fontSize: 13, color: T.textSub }}>
               {showModal === "approve"
                 ? "This will approve the vendor and submit details to SAGE for creation."
                 : showModal === "reject"
                   ? "The requester will be notified to resubmit the VIF form."
-                  : "Edited details will be saved."}
+                  : showModal === "edit"
+                    ? "Edited details will be saved."
+                    : "A reminder email will be sent to the requester to complete the VIF."}
             </p>
-            {showModal !== "edit" && (
+            {showModal !== "edit" && showModal !== "remind" && (
               <div style={{ marginBottom: 12 }}>
                 <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px" }}>
                   Comment {showModal === "reject" && <span style={{ color: T.danger }}>*</span>}
@@ -1806,7 +1831,7 @@ function VendorDetail({ vendor, onBack, onUpdateVendor }) {
                   cursor: (showModal === "reject" && !comment.trim()) ? "not-allowed" : "pointer",
                   opacity: (showModal === "reject" && !comment.trim()) ? 0.5 : 1
                 }}>
-                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : "Confirm Edit"}
+                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : showModal === "remind" ? "Send Reminder" : "Confirm Edit"}
               </button>
             </div>
           </div>
@@ -2155,7 +2180,10 @@ export default function App() {
     <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", background: T.bg, minHeight: "100vh", display: "flex" }}>
       <Sidebar active={selectedPrf || vrfPrf || selectedVendor ? (vrfPrf ? "vendors" : selectedVendor ? "vendors" : "prfs") : page} onNav={(key) => { setPage(key); setSelectedPrf(null); setVrfPrf(null); setSelectedVendor(null); }} />
       <div style={{ flex: 1, marginLeft: T.sidebarW }}>
-        <TopBar title={vrfPrf ? "VRF / VIF Submission" : selectedVendor ? `Vendor Detail – ${selectedVendor.name}` : selectedPrf ? `PRF Detail – ${selectedPrf.id}` : pageTitle[page]} />
+        <TopBar
+          title={vrfPrf ? "VRF / VIF Submission" : selectedVendor ? `Vendor Detail – ${selectedVendor.name}` : selectedPrf ? `PRF Detail – ${selectedPrf.id}` : pageTitle[page]}
+          showSearch={!selectedPrf && !selectedVendor && !vrfPrf}
+        />
         <main style={{ padding: "24px 28px", paddingTop: T.headerH + 24 }}>
           {renderContent()}
           {/* Quick action: open VRF for new vendor PRF */}
