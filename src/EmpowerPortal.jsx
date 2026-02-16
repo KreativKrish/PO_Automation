@@ -983,7 +983,7 @@ function PRFsPage({ prfs, onSelectPrf }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  PRF DETAIL PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
-function PRFDetail({ prf, onBack, onUpdatePrf }) {
+function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
   const [editing, setEditing] = useState(false);
   const [remarks, setRemarks] = useState("");
   const [showModal, setShowModal] = useState(null); // 'approve' | 'reject' | 'edit' | 'save'
@@ -1132,7 +1132,13 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
 
           {/* Vendor Info (editable for 'new' status) */}
           <Card>
-            <CardHeader icon="vendors" title="Vendor Information" />
+            <CardHeader icon="vendors" title="Vendor Information" action={
+              prf.vendorStatus !== "existing" && (
+                <button onClick={() => onViewVendor(prf.vendorName)} style={{ background: "none", border: `1px solid ${T.primary}`, borderRadius: 6, padding: "4px 10px", fontSize: 12, color: T.primary, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                  <Icon name="eye" size={13} color={T.primary} /> View Vendor Details
+                </button>
+              )
+            } />
             <div style={{ padding: "0 20px 18px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
               {editing && isNewStatus ? (
                 [
@@ -2044,7 +2050,7 @@ export default function App() {
   const renderContent = () => {
     if (vrfPrf) return <VRFPage prf={vrfPrf} onBack={() => setVrfPrf(null)} />;
     if (selectedVendor) return <VendorDetail vendor={selectedVendor} onBack={() => setSelectedVendor(null)} onUpdateVendor={handleVendorUpdate} />;
-    if (selectedPrf) return <PRFDetail prf={selectedPrf} onBack={() => setSelectedPrf(null)} onUpdatePrf={(updated) => { setPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p))); setSelectedPrf(updated); }} />;
+    if (selectedPrf) return <PRFDetail prf={selectedPrf} onBack={() => setSelectedPrf(null)} onUpdatePrf={(updated) => { setPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p))); setSelectedPrf(updated); }} onViewVendor={(name) => { const v = vendors.find(v => v.name === name); if (v) { setSelectedVendor(v); setSelectedPrf(null); } }} />;
     switch (page) {
       case "prfs": return <PRFsPage prfs={prfs} onSelectPrf={setSelectedPrf} />;
       case "vendors": return <VendorsPage onSelectVendor={setSelectedVendor} />;
