@@ -371,7 +371,7 @@ const MOCK_VENDORS = [
     newVendorName: "DevTools Incorporated",
     pan: "FGHIJ5678K",
     gstin: null,
-    status: "pending_sage",
+    status: "approval_pending",
     msme: false,
     type: "Teamlease Foundation",
     bankName: "Kotak Mahindra Bank",
@@ -379,7 +379,45 @@ const MOCK_VENDORS = [
     ifscCode: "KKBK0005678",
     msmeRegNo: "—",
     typeOfEnterprise: "Small",
-    majorActivity: "Software Tools"
+    majorActivity: "Software Tools",
+    contactName: "John Smith",
+    contactEmail: "john@devtools.com",
+    contactPhone: "+91 9876543210",
+    vifSubmittedAt: "2026-01-31T10:00:00Z",
+    vifSubmittedBy: "Rohan Mehta",
+    docs: [
+      { name: "PAN Card", type: "vendor", url: "#" },
+      { name: "Bank Statement", type: "vendor", url: "#" },
+      { name: "Company Registration", type: "vendor", url: "#" },
+    ],
+    remarks: [
+      { by: "System", at: "2026-01-30T11:23:00Z", text: "VIF email sent to requester." },
+      { by: "Rohan Mehta", at: "2026-01-31T10:00:00Z", text: "VIF form submitted with all required documents." },
+    ]
+  },
+  {
+    code: null,
+    name: "SkillUp Academy",
+    newVendorName: "SkillUp Learning Academy Pvt Ltd",
+    pan: "ASDFG5678H",
+    gstin: null,
+    status: "pending_requester",
+    msme: true,
+    type: "Teamlease Edtech",
+    bankName: "",
+    bankAccountNo: "",
+    ifscCode: "",
+    msmeRegNo: "MSME-KA-2024-009876",
+    typeOfEnterprise: "Micro",
+    majorActivity: "Training Services",
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    vifTriggeredAt: "2026-02-02T14:21:00Z",
+    docs: [],
+    remarks: [
+      { by: "System", at: "2026-02-02T14:21:00Z", text: "Vendor not found in SAGE. VIF email sent to requester Neha Kapoor." },
+    ]
   },
 ];
 
@@ -394,8 +432,10 @@ const STATUS_MAP = {
 
 const VENDOR_STATUS_MAP = {
   existing: { label: "Existing", color: "#16a34a", bg: "#dcfce7" },
-  new_pending: { label: "New - Pending", color: "#fb923c", bg: "#ffedd5" },
-  new_created: { label: "New - Created", color: "#3b82f6", bg: "#dbeafe" },
+  pending_requester: { label: "Pending - Requester", color: "#f59e0b", bg: "#fef3c7" },
+  approval_pending: { label: "Approval Pending", color: "#fb923c", bg: "#ffedd5" },
+  pending_sage: { label: "Pending - SAGE", color: "#3b82f6", bg: "#dbeafe" },
+  created: { label: "Created", color: "#14b8a6", bg: "#ccfbf1" },
 };
 
 const STATUS_LIFECYCLE = ["New", "Pending", "Approved", "Closed / PO Sent"];
@@ -487,8 +527,8 @@ const NAV_ITEMS = [
   { key: "vendors", label: "Vendors", icon: "vendors" },
   { key: "orders", label: "Purchase Orders", icon: "orders" },
   { key: "documents", label: "Documents", icon: "documents" },
-  { key: "reports", label: "Reports / Audit", icon: "reports" },
 ];
+
 
 function Sidebar({ active, onNav }) {
   return (
@@ -1375,24 +1415,10 @@ function PRFDetail({ prf, onBack, onUpdatePrf }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  VENDORS PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
-function VendorsPage() {
+function VendorsPage({ onSelectVendor }) {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
-
-  // Column visibility state - all columns visible by default
-  const [visibleColumns, setVisibleColumns] = useState({
-    vendorName: true,
-    vendorCode: true,
-    newVendorName: true,
-    gst: true,
-    bank: true,
-    bankAccountNo: true,
-    ifscCode: true,
-    msmeRegNo: true,
-    typeOfEnterprise: true,
-    majorActivity: true,
-  });
 
   // Apply filters
   let filtered = MOCK_VENDORS;
@@ -1403,39 +1429,15 @@ function VendorsPage() {
     filtered = filtered.filter((v) => v.type === typeFilter);
   }
 
-  // Column definitions
-  const allColumns = [
-    { key: "vendorName", label: "Vendor Name" },
-    { key: "vendorCode", label: "Vendor Code" },
-    { key: "newVendorName", label: "New Vendor Name" },
-    { key: "gst", label: "GST" },
-    { key: "bank", label: "Bank" },
-    { key: "bankAccountNo", label: "Bank A/C No" },
-    { key: "ifscCode", label: "IFSC Code" },
-    { key: "msmeRegNo", label: "MSME Reg No." },
-    { key: "typeOfEnterprise", label: "Type of Enterprise" },
-    { key: "majorActivity", label: "Major Activity" },
-  ];
-
-  const toggleColumn = (key) => {
-    setVisibleColumns(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const toggleAllColumns = (show) => {
-    const newState = {};
-    allColumns.forEach(col => { newState[col.key] = show; });
-    setVisibleColumns(newState);
-  };
-
   return (
     <div>
       {/* Filter Controls */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, gap: 12, flexWrap: "wrap" }}>
         {/* Status filters */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {["all", "active", "pending_sage"].map((f) => (
+          {["all", "active", "approval_pending", "pending_requester", "pending_sage", "created"].map((f) => (
             <button key={f} onClick={() => setStatusFilter(f)} style={{ background: statusFilter === f ? T.primary : "#fff", color: statusFilter === f ? "#fff" : T.textSub, border: `1px solid ${statusFilter === f ? T.primary : T.cardBorder}`, borderRadius: 7, padding: "6px 14px", fontSize: 13, fontWeight: statusFilter === f ? 600 : 500, cursor: "pointer", transition: "all .15s" }}>
-              {f === "all" ? "All" : f === "active" ? "Active" : "Pending SAGE"}
+              {f === "all" ? "All" : VENDOR_STATUS_MAP[f]?.label || f}
             </button>
           ))}
         </div>
@@ -1450,14 +1452,14 @@ function VendorsPage() {
       {/* Expandable Filters Panel */}
       {showFilters && (
         <Card style={{ padding: "18px 20px", marginBottom: 18, background: "#f7fafd" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 24 }}>
             {/* Type Filter */}
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                 <Icon name="vendors" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
                 Filter by Type
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ display: "flex", flexDirection: "row", gap: 8 }}>
                 {["all", "Teamlease Edtech", "Teamlease Foundation", "AIF"].map((type) => (
                   <label key={type} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "6px 10px", borderRadius: 6, background: typeFilter === type ? T.primaryLight : "#fff", border: `1px solid ${typeFilter === type ? T.primary : T.cardBorder}`, transition: "all .15s" }}>
                     <input
@@ -1469,39 +1471,6 @@ function VendorsPage() {
                     />
                     <span style={{ fontSize: 13, fontWeight: typeFilter === type ? 600 : 400, color: typeFilter === type ? T.primary : T.textMain }}>
                       {type === "all" ? "All Types" : type}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Column Visibility */}
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span>
-                  <Icon name="eye" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                  Show/Hide Columns
-                </span>
-                <div style={{ display: "flex", gap: 6 }}>
-                  <button onClick={() => toggleAllColumns(true)} style={{ fontSize: 10, padding: "3px 8px", background: T.success, color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontWeight: 600 }}>
-                    Show All
-                  </button>
-                  <button onClick={() => toggleAllColumns(false)} style={{ fontSize: 10, padding: "3px 8px", background: T.danger, color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontWeight: 600 }}>
-                    Hide All
-                  </button>
-                </div>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                {allColumns.map((col) => (
-                  <label key={col.key} style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, padding: "4px 8px", borderRadius: 4, background: visibleColumns[col.key] ? "#e0f2fe" : "#fff", border: `1px solid ${visibleColumns[col.key] ? "#0ea5e9" : T.cardBorder}`, transition: "all .12s" }}>
-                    <input
-                      type="checkbox"
-                      checked={visibleColumns[col.key]}
-                      onChange={() => toggleColumn(col.key)}
-                      style={{ cursor: "pointer" }}
-                    />
-                    <span style={{ fontWeight: visibleColumns[col.key] ? 600 : 400, color: visibleColumns[col.key] ? "#0369a1" : T.textSub }}>
-                      {col.label}
                     </span>
                   </label>
                 ))}
@@ -1520,49 +1489,329 @@ function VendorsPage() {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
               <tr style={{ background: T.bg }}>
-                {visibleColumns.vendorName && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Vendor Name</th>}
-                {visibleColumns.vendorCode && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Vendor Code</th>}
-                {visibleColumns.newVendorName && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>New Vendor Name</th>}
-                {visibleColumns.gst && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>GST</th>}
-                {visibleColumns.bank && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Bank</th>}
-                {visibleColumns.bankAccountNo && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Bank A/C No</th>}
-                {visibleColumns.ifscCode && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>IFSC Code</th>}
-                {visibleColumns.msmeRegNo && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>MSME Reg No.</th>}
-                {visibleColumns.typeOfEnterprise && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Type of Enterprise</th>}
-                {visibleColumns.majorActivity && <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Major Activity</th>}
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Vendor Name</th>
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Vendor Code</th>
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Type</th>
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>GST</th>
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Bank</th>
                 <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Status</th>
+                <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>Action</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((v, i) => (
-                <tr key={v.name} style={{ background: i % 2 === 0 ? "#fff" : "#fafbfc", borderBottom: `1px solid ${T.cardBorder}`, transition: "background .12s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#f0f7ff")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafbfc")}>
-                  {visibleColumns.vendorName && <td style={{ padding: "11px 16px", color: T.textMain, fontWeight: 500 }}>{v.name}</td>}
-                  {visibleColumns.vendorCode && <td style={{ padding: "11px 16px", fontWeight: 600, color: T.primary }}>{v.code || "—"}</td>}
-                  {visibleColumns.newVendorName && <td style={{ padding: "11px 16px", color: T.textSub, fontSize: 12 }}>{v.newVendorName}</td>}
-                  {visibleColumns.gst && <td style={{ padding: "11px 16px", color: T.textSub, fontFamily: "monospace", fontSize: 12 }}>{v.gstin || "—"}</td>}
-                  {visibleColumns.bank && <td style={{ padding: "11px 16px", color: T.textMain }}>{v.bankName}</td>}
-                  {visibleColumns.bankAccountNo && <td style={{ padding: "11px 16px", color: T.textSub, fontFamily: "monospace", fontSize: 12 }}>{v.bankAccountNo}</td>}
-                  {visibleColumns.ifscCode && <td style={{ padding: "11px 16px", color: T.textSub, fontFamily: "monospace", fontSize: 12 }}>{v.ifscCode}</td>}
-                  {visibleColumns.msmeRegNo && <td style={{ padding: "11px 16px", color: T.textSub, fontSize: 12 }}>{v.msmeRegNo}</td>}
-                  {visibleColumns.typeOfEnterprise && <td style={{ padding: "11px 16px" }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 600, color: v.typeOfEnterprise === "Micro" ? "#16a34a" : v.typeOfEnterprise === "Small" ? "#0ea5e9" : "#f59e0b", background: v.typeOfEnterprise === "Micro" ? "#dcfce7" : v.typeOfEnterprise === "Small" ? "#e0f2fe" : "#fef3c7", padding: "3px 10px", borderRadius: 12 }}>
-                      {v.typeOfEnterprise}
-                    </span>
-                  </td>}
-                  {visibleColumns.majorActivity && <td style={{ padding: "11px 16px", color: T.textMain, fontSize: 12 }}>{v.majorActivity}</td>}
-                  <td style={{ padding: "11px 16px" }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 600, color: v.status === "active" ? "#16a34a" : "#d97706", background: v.status === "active" ? "#dcfce7" : "#fef3c7", padding: "3px 10px", borderRadius: 12 }}>
-                      {v.status === "active" ? "Active" : "Pending SAGE"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((v, i) => {
+                const statusInfo = VENDOR_STATUS_MAP[v.status];
+                return (
+                  <tr key={v.name} style={{ background: i % 2 === 0 ? "#fff" : "#fafbfc", borderBottom: `1px solid ${T.cardBorder}`, transition: "background .12s" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f0f7ff")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafbfc")}>
+                    <td style={{ padding: "11px 16px", color: T.textMain, fontWeight: 500 }}>{v.name}</td>
+                    <td style={{ padding: "11px 16px", fontWeight: 600, color: T.primary }}>{v.code || "—"}</td>
+                    <td style={{ padding: "11px 16px", color: T.textSub, fontSize: 12 }}>{v.type}</td>
+                    <td style={{ padding: "11px 16px", color: T.textSub, fontFamily: "monospace", fontSize: 12 }}>{v.gstin || "—"}</td>
+                    <td style={{ padding: "11px 16px", color: T.textMain }}>{v.bankName || "—"}</td>
+                    <td style={{ padding: "11px 16px" }}>
+                      <span style={{ fontSize: 11.5, fontWeight: 600, color: statusInfo?.color, background: statusInfo?.bg, padding: "3px 10px", borderRadius: 12 }}>
+                        {statusInfo?.label}
+                      </span>
+                    </td>
+                    <td style={{ padding: "11px 16px" }}>
+                      {(v.status === "approval_pending" || v.status === "pending_requester") && (
+                        <button onClick={() => onSelectVendor(v)} style={{ background: T.primaryLight, color: T.primary, border: `1px solid ${T.primary}22`, borderRadius: 6, padding: "4px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <Icon name="eye" size={13} color={T.primary} /> View
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  VENDOR DETAIL PAGE (for approval/rejection workflow)
+// ═══════════════════════════════════════════════════════════════════════════════
+function VendorDetail({ vendor, onBack, onUpdateVendor }) {
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState({ ...vendor });
+  const [showModal, setShowModal] = useState(null); // 'approve' | 'reject'
+  const [comment, setComment] = useState("");
+
+  const canEdit = vendor.status === "approval_pending";
+  const canApprove = vendor.status === "approval_pending";
+
+  const handleAction = (action) => {
+    if (action === "approve") {
+      if (editing) {
+        // Save edits first
+        onUpdateVendor({ ...editData, remarks: [...(editData.remarks || []), { by: "Vivek", at: new Date().toISOString(), text: "Vendor details updated." }] });
+        setEditing(false);
+      }
+      // Approve and submit to SAGE
+      onUpdateVendor({
+        ...editData,
+        status: "pending_sage",
+        remarks: [...(editData.remarks || []), { by: "Vivek", at: new Date().toISOString(), text: comment || "Vendor approved and submitted to SAGE." }]
+      });
+      setShowModal(null);
+      alert("Vendor approved and submitted to SAGE!");
+    } else if (action === "reject") {
+      if (!comment.trim()) {
+        alert("Comment is mandatory for rejection!");
+        return;
+      }
+      onUpdateVendor({
+        ...vendor,
+        status: "pending_requester",
+        remarks: [...(vendor.remarks || []), { by: "Vivek", at: new Date().toISOString(), text: `Rejected: ${comment}` }]
+      });
+      setShowModal(null);
+      alert("Vendor rejected. Requester will be notified.");
+    } else if (action === "edit") {
+      // Save edits
+      onUpdateVendor({
+        ...editData,
+        remarks: [...(editData.remarks || []), { by: "Vivek", at: new Date().toISOString(), text: "Vendor details updated." }]
+      });
+      setEditing(false);
+      setShowModal(null);
+    }
+  };
+
+  const statusInfo = VENDOR_STATUS_MAP[vendor.status];
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+        <button onClick={onBack} style={{ background: "none", border: `1px solid ${T.cardBorder}`, borderRadius: 7, padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: T.textSub, fontSize: 13 }}>
+          <Icon name="arrow_left" size={15} color={T.textSub} /> Back
+        </button>
+        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: T.textMain }}>Vendor Detail – {vendor.name}</h2>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18, alignItems: "start" }}>
+        {/* Left column - Vendor Details */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <Card>
+            <CardHeader icon="vendors" title="Vendor Information" action={
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: statusInfo?.color, background: statusInfo?.bg, padding: "3px 10px", borderRadius: 12 }}>
+                {statusInfo?.label}
+              </span>
+            } />
+            <div style={{ padding: "0 20px 18px" }}>
+              {editing ? (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
+                  {[
+                    { label: "Vendor Name", key: "name", type: "text" },
+                    { label: "New Vendor Name", key: "newVendorName", type: "text" },
+                    { label: "PAN", key: "pan", type: "text" },
+                    { label: "GSTIN", key: "gstin", type: "text" },
+                    { label: "Contact Name", key: "contactName", type: "text" },
+                    { label: "Contact Email", key: "contactEmail", type: "email" },
+                    { label: "Contact Phone", key: "contactPhone", type: "text" },
+                    { label: "Type", key: "type", type: "text" },
+                  ].map((f) => (
+                    <div key={f.key}>
+                      <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>{f.label}</div>
+                      <input type={f.type} value={editData[f.key] || ""} onChange={(e) => setEditData({ ...editData, [f.key]: e.target.value })} style={{ width: "100%", marginTop: 4, padding: "7px 10px", border: `1px solid ${T.primary}`, borderRadius: 6, fontSize: 13, outline: "none", boxSizing: "border-box", background: "#fff" }} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
+                  {[
+                    ["Vendor Name", vendor.name],
+                    ["New Vendor Name", vendor.newVendorName],
+                    ["PAN", vendor.pan],
+                    ["GSTIN", vendor.gstin || "—"],
+                    ["Contact Name", vendor.contactName || "—"],
+                    ["Contact Email", vendor.contactEmail || "—"],
+                    ["Contact Phone", vendor.contactPhone || "—"],
+                    ["Type", vendor.type],
+                  ].map(([label, val]) => (
+                    <div key={label}>
+                      <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>{label}</div>
+                      <div style={{ fontSize: 13.5, color: T.textMain, fontWeight: 500 }}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader icon="bank" title="Bank Details" />
+            <div style={{ padding: "0 20px 18px" }}>
+              {editing ? (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
+                  {[
+                    { label: "Bank Name", key: "bankName", type: "text" },
+                    { label: "Account Number", key: "bankAccountNo", type: "text" },
+                    { label: "IFSC Code", key: "ifscCode", type: "text" },
+                    { label: "MSME Reg No.", key: "msmeRegNo", type: "text" },
+                    { label: "Type of Enterprise", key: "typeOfEnterprise", type: "text" },
+                    { label: "Major Activity", key: "majorActivity", type: "text" },
+                  ].map((f) => (
+                    <div key={f.key}>
+                      <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>{f.label}</div>
+                      <input type={f.type} value={editData[f.key] || ""} onChange={(e) => setEditData({ ...editData, [f.key]: e.target.value })} style={{ width: "100%", marginTop: 4, padding: "7px 10px", border: `1px solid ${T.primary}`, borderRadius: 6, fontSize: 13, outline: "none", boxSizing: "border-box", background: "#fff" }} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
+                  {[
+                    ["Bank Name", vendor.bankName || "—"],
+                    ["Account Number", vendor.bankAccountNo || "—"],
+                    ["IFSC Code", vendor.ifscCode || "—"],
+                    ["MSME Reg No.", vendor.msmeRegNo || "—"],
+                    ["Type of Enterprise", vendor.typeOfEnterprise || "—"],
+                    ["Major Activity", vendor.majorActivity || "—"],
+                  ].map(([label, val]) => (
+                    <div key={label}>
+                      <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>{label}</div>
+                      <div style={{ fontSize: 13.5, color: T.textMain, fontWeight: 500 }}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
+        </div>
+
+        {/* Right column */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          {/* Action Panel */}
+          <Card>
+            <CardHeader icon="check" title="Action Panel" />
+            <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
+              {canApprove && (
+                <>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => { if (editing) setShowModal("edit"); else setShowModal("approve"); }} style={{ flex: 1, background: editing ? T.primary : T.primary, color: "#fff", border: "none", borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      {editing ? "Save Edit" : "Approve"}
+                    </button>
+                    <button onClick={() => setShowModal("reject")} style={{ flex: 1, background: "#fff", color: T.danger, border: `1px solid ${T.danger}`, borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      Reject
+                    </button>
+                  </div>
+                  {editing ? (
+                    <button onClick={() => setEditing(false)} style={{ background: "none", border: `1px solid ${T.cardBorder}`, borderRadius: 7, padding: "7px 0", fontSize: 12.5, color: T.textSub, cursor: "pointer" }}>
+                      Cancel Edit
+                    </button>
+                  ) : (
+                    <button onClick={() => setEditing(true)} style={{ background: "none", border: `1px solid ${T.primary}`, borderRadius: 7, padding: "7px 0", fontSize: 12.5, color: T.primary, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                      <Icon name="edit" size={13} color={T.primary} /> Edit Vendor Details
+                    </button>
+                  )}
+                </>
+              )}
+              {!canApprove && (
+                <div style={{ fontSize: 13, color: T.textSub, textAlign: "center", padding: "12px 0" }}>No actions available for current status.</div>
+              )}
+            </div>
+          </Card>
+
+          {/* Documents */}
+          {vendor.docs && vendor.docs.length > 0 && (
+            <Card>
+              <CardHeader icon="documents" title="Documents" />
+              <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
+                {vendor.docs.map((doc, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 7, border: `1px solid ${T.cardBorder}`, background: T.bg }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <Icon name="file_text" size={16} color={T.primary} />
+                      <span style={{ fontSize: 13, color: T.textMain, fontWeight: 500 }}>{doc.name}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}><Icon name="eye" size={15} color={T.textSub} /></button>
+                      <button style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}><Icon name="download" size={15} color={T.textSub} /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {/* Audit Trail */}
+          {vendor.remarks && vendor.remarks.length > 0 && (
+            <Card>
+              <CardHeader icon="clock" title="Audit Trail" />
+              <div style={{ padding: "0 20px 18px" }}>
+                {vendor.remarks.map((r, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, marginBottom: i < vendor.remarks.length - 1 ? 14 : 0 }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: r.by === "System" ? T.bg : T.primaryLight, border: `2px solid ${r.by === "System" ? T.cardBorder : T.primary}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        {r.by === "System" ? <Icon name="sync" size={12} color={T.textSub} /> : <Icon name="user" size={12} color={T.primary} />}
+                      </div>
+                      {i < vendor.remarks.length - 1 && <div style={{ width: 2, flex: 1, background: T.cardBorder, minHeight: 20 }} />}
+                    </div>
+                    <div style={{ paddingBottom: 4 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: r.by === "System" ? T.textSub : T.primary }}>{r.by}</span>
+                        <span style={{ fontSize: 10.5, color: T.textSub }}>{fmtTime(r.at)}</span>
+                      </div>
+                      <div style={{ fontSize: 12.5, color: T.textMain, marginTop: 2 }}>{r.text}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
+          <div style={{ background: "#fff", borderRadius: 12, width: 420, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,.2)" }}>
+            <h3 style={{ margin: "0 0 6px", fontSize: 17, color: T.textMain }}>
+              {showModal === "approve" ? "Approve Vendor" : showModal === "reject" ? "Reject Vendor" : "Save Edits"}
+            </h3>
+            <p style={{ margin: "0 0 14px", fontSize: 13, color: T.textSub }}>
+              {showModal === "approve"
+                ? "This will approve the vendor and submit details to SAGE for creation."
+                : showModal === "reject"
+                  ? "The requester will be notified to resubmit the VIF form."
+                  : "Edited details will be saved."}
+            </p>
+            {showModal !== "edit" && (
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px" }}>
+                  Comment {showModal === "reject" && <span style={{ color: T.danger }}>*</span>}
+                </label>
+                <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder={showModal === "reject" ? "Reason for rejection (mandatory)" : "Optional comment"} rows={3} style={{ width: "100%", marginTop: 5, padding: "8px 10px", border: `1px solid ${T.cardBorder}`, borderRadius: 7, fontSize: 13, resize: "vertical", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }} />
+              </div>
+            )}
+            {showModal === "reject" && !comment.trim() && <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 7, padding: "8px 12px", fontSize: 12.5, color: "#92400e", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}><Icon name="alert" size={14} color="#92400e" /> Comment is mandatory for rejection.</div>}
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 18 }}>
+              <button onClick={() => setShowModal(null)} style={{ background: "#f3f4f6", border: "none", borderRadius: 7, padding: "8px 18px", fontSize: 13, cursor: "pointer", color: T.textSub }}>Cancel</button>
+              <button
+                onClick={() => handleAction(showModal)}
+                disabled={showModal === "reject" && !comment.trim()}
+                style={{
+                  background: showModal === "reject" ? T.danger : T.primary,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 7,
+                  padding: "8px 20px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: (showModal === "reject" && !comment.trim()) ? "not-allowed" : "pointer",
+                  opacity: (showModal === "reject" && !comment.trim()) ? 0.5 : 1
+                }}>
+                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : "Confirm Edit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1776,88 +2025,7 @@ function DocumentsPage({ prfs }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-//  REPORTS / AUDIT PAGE
-// ═══════════════════════════════════════════════════════════════════════════════
-function ReportsPage({ prfs }) {
-  const statusCounts = Object.entries(
-    prfs.reduce((acc, p) => { acc[p.status] = (acc[p.status] || 0) + 1; return acc; }, {})
-  );
-  const allHistory = prfs.flatMap((p) => p.history.map((h) => ({ ...h, prf: p.id, requester: p.requester }))).sort((a, b) => new Date(b.at) - new Date(a.at));
 
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 18, alignItems: "start" }}>
-      {/* Status distribution */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Card>
-          <CardHeader icon="reports" title="Status Distribution" />
-          <div style={{ padding: "0 20px 18px" }}>
-            {statusCounts.map(([status, count]) => {
-              const s = STATUS_MAP[status];
-              const pct = Math.round((count / prfs.length) * 100);
-              return (
-                <div key={status} style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 4 }}>
-                    <span style={{ color: T.textMain, fontWeight: 600 }}>{s?.label}</span>
-                    <span style={{ color: T.textSub }}>{count} ({pct}%)</span>
-                  </div>
-                  <div style={{ height: 7, borderRadius: 4, background: T.bg, overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${pct}%`, background: s?.color, borderRadius: 4, transition: "width .4s" }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-        <Card style={{ padding: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-            <Icon name="mail" size={16} color={T.primary} />
-            <span style={{ fontSize: 14, fontWeight: 700, color: T.textMain }}>Notifications Log</span>
-          </div>
-          {[
-            { msg: "New PRF detected → Vivek notified", time: "2 hrs ago" },
-            { msg: "VRF required → Rohan notified", time: "3 hrs ago" },
-            { msg: "PO Generated → Kavitha notified", time: "1 day ago" },
-            { msg: "PRF Rejected → Siddharth notified", time: "5 days ago" },
-          ].map((n, i) => (
-            <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: i < 3 ? `1px solid ${T.cardBorder}` : "none" }}>
-              <span style={{ fontSize: 12.5, color: T.textMain }}>{n.msg}</span>
-              <span style={{ fontSize: 11, color: T.textSub, whiteSpace: "nowrap", marginLeft: 12 }}>{n.time}</span>
-            </div>
-          ))}
-        </Card>
-      </div>
-      {/* Full audit timeline */}
-      <Card>
-        <CardHeader icon="clock" title="Full Audit Trail" action={
-          <button style={{ background: T.primaryLight, color: T.primary, border: `1px solid ${T.primary}22`, borderRadius: 6, padding: "4px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-            <Icon name="download" size={13} color={T.primary} /> Export Log
-          </button>
-        } />
-        <div style={{ padding: "0 20px 18px" }}>
-          {allHistory.map((h, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, marginBottom: i < allHistory.length - 1 ? 12 : 0 }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div style={{ width: 30, height: 30, borderRadius: "50%", background: T.primaryLight, border: `2px solid ${T.primary}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Icon name="clock" size={13} color={T.primary} />
-                </div>
-                {i < allHistory.length - 1 && <div style={{ width: 2, flex: 1, background: T.cardBorder, minHeight: 18 }} />}
-              </div>
-              <div style={{ paddingBottom: 2 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: T.primary }}>{h.prf}</span>
-                  <StatusBadge status={Object.keys(STATUS_MAP).find((k) => STATUS_MAP[k].label === h.status) || "new"} />
-                  <span style={{ fontSize: 10.5, color: T.textSub }}>{fmtTime(h.at)}</span>
-                </div>
-                <div style={{ fontSize: 12, color: T.textSub, marginTop: 2 }}>Requester: {h.requester}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
-}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  VRF / VIF SUBMISSION PAGE (for new vendors)
@@ -1951,21 +2119,28 @@ function VRFPage({ prf, onBack }) {
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [selectedPrf, setSelectedPrf] = useState(null);
+  const [selectedVendor, setSelectedVendor] = useState(null);
   const [vrfPrf, setVrfPrf] = useState(null);
   const [prfs, setPrfs] = useState(MOCK_PRFS);
+  const [vendors, setVendors] = useState(MOCK_VENDORS);
 
-  const pageTitle = { dashboard: "Dashboard", prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", documents: "Documents", reports: "Reports / Audit" };
+  const pageTitle = { dashboard: "Dashboard", prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", documents: "Documents" };
+
+  const handleVendorUpdate = (updatedVendor) => {
+    setVendors((prev) => prev.map((v) => (v.name === updatedVendor.name ? updatedVendor : v)));
+    setSelectedVendor(updatedVendor);
+  };
 
   const renderContent = () => {
     if (vrfPrf) return <VRFPage prf={vrfPrf} onBack={() => setVrfPrf(null)} />;
+    if (selectedVendor) return <VendorDetail vendor={selectedVendor} onBack={() => setSelectedVendor(null)} onUpdateVendor={handleVendorUpdate} />;
     if (selectedPrf) return <PRFDetail prf={selectedPrf} onBack={() => setSelectedPrf(null)} onUpdatePrf={(updated) => { setPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p))); setSelectedPrf(updated); }} />;
     switch (page) {
       case "dashboard": return <Dashboard prfs={prfs} onSelectPrf={setSelectedPrf} />;
       case "prfs": return <PRFsPage prfs={prfs} onSelectPrf={setSelectedPrf} />;
-      case "vendors": return <VendorsPage />;
+      case "vendors": return <VendorsPage onSelectVendor={setSelectedVendor} />;
       case "orders": return <PurchaseOrdersPage prfs={prfs} />;
       case "documents": return <DocumentsPage prfs={prfs} />;
-      case "reports": return <ReportsPage prfs={prfs} />;
       default: return null;
     }
   };
@@ -1978,13 +2153,13 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", background: T.bg, minHeight: "100vh", display: "flex" }}>
-      <Sidebar active={selectedPrf || vrfPrf ? (vrfPrf ? "vendors" : "prfs") : page} onNav={(key) => { setPage(key); setSelectedPrf(null); setVrfPrf(null); }} />
+      <Sidebar active={selectedPrf || vrfPrf || selectedVendor ? (vrfPrf ? "vendors" : selectedVendor ? "vendors" : "prfs") : page} onNav={(key) => { setPage(key); setSelectedPrf(null); setVrfPrf(null); setSelectedVendor(null); }} />
       <div style={{ flex: 1, marginLeft: T.sidebarW }}>
-        <TopBar title={vrfPrf ? "VRF / VIF Submission" : selectedPrf ? `PRF Detail – ${selectedPrf.id}` : pageTitle[page]} />
+        <TopBar title={vrfPrf ? "VRF / VIF Submission" : selectedVendor ? `Vendor Detail – ${selectedVendor.name}` : selectedPrf ? `PRF Detail – ${selectedPrf.id}` : pageTitle[page]} />
         <main style={{ padding: "24px 28px", paddingTop: T.headerH + 24 }}>
           {renderContent()}
           {/* Quick action: open VRF for new vendor PRF */}
-          {!selectedPrf && !vrfPrf && page === "dashboard" && (
+          {!selectedPrf && !vrfPrf && !selectedVendor && page === "dashboard" && (
             <div style={{ marginTop: 20 }}>
               <Card style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fffbeb", border: "1px solid #f6e05e" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
