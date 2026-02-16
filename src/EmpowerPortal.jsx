@@ -152,6 +152,9 @@ const MOCK_PRFS = [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-22T16:45:00Z" },
       { name: "Vendor PAN Card", type: "vendor", url: "#", source: "PRF Attachment", uploadedAt: "2026-01-22T16:45:00Z" },
     ],
+  },
+  {
+    id: "PRF-2526-005",
     requester: "Kavitha Menon",
     dept: "Marketing",
     costCode: "CC-5012",
@@ -525,7 +528,6 @@ const NAV_ITEMS = [
   { key: "prfs", label: "PRFs", icon: "prfs", badge: 2 },
   { key: "vendors", label: "Vendors", icon: "vendors" },
   { key: "orders", label: "Purchase Orders", icon: "orders" },
-  { key: "documents", label: "Documents", icon: "documents" },
 ];
 
 
@@ -1931,56 +1933,7 @@ function POPreview({ po, onBack }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  DOCUMENTS PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
-function DocumentsPage({ prfs }) {
-  const allDocs = prfs.flatMap((p) => p.docs.map((d) => ({ ...d, prf: p.id, vendorName: p.vendorName })));
-  return (
-    <div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 22 }}>
-        {[
-          { label: "PRF Documents", count: allDocs.filter((d) => d.type === "prf").length, color: T.primary, icon: "file_text" },
-          { label: "Vendor Documents", count: allDocs.filter((d) => d.type === "vendor").length, color: T.accent, icon: "documents" },
-          { label: "Generated POs", count: allDocs.filter((d) => d.type === "po").length, color: "#34d399", icon: "orders" },
-        ].map((s) => (
-          <Card key={s.label} style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ width: 42, height: 42, borderRadius: 10, background: `${s.color}18`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Icon name={s.icon} size={20} color={s.color} />
-            </div>
-            <div>
-              <div style={{ fontSize: 12, color: T.textSub }}>{s.label}</div>
-              <div style={{ fontSize: 22, fontWeight: 700, color: T.textMain }}>{s.count}</div>
-            </div>
-          </Card>
-        ))}
-      </div>
-      <Card>
-        <CardHeader icon="documents" title="All Documents" />
-        <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
-          {allDocs.map((doc, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: 8, border: `1px solid ${T.cardBorder}`, background: i % 2 === 0 ? "#fff" : T.bg }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 8, background: doc.type === "po" ? "#d1fae5" : doc.type === "prf" ? "#dbeafe" : "#fff7ed", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon name="file_text" size={17} color={doc.type === "po" ? "#16a34a" : doc.type === "prf" ? T.primary : T.accent} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: T.textMain }}>{doc.name}</div>
-                  <div style={{ fontSize: 11.5, color: T.textSub }}>PRF: {doc.prf} · {doc.vendorName}</div>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: 6 }}>
-                <button style={{ background: T.primaryLight, color: T.primary, border: `1px solid ${T.primary}22`, borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                  <Icon name="eye" size={13} color={T.primary} /> View
-                </button>
-                <button style={{ background: "#fff", color: T.textSub, border: `1px solid ${T.cardBorder}`, borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                  <Icon name="download" size={13} color={T.textSub} /> Download
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
-}
+
 
 
 
@@ -2081,7 +2034,7 @@ export default function App() {
   const [prfs, setPrfs] = useState(MOCK_PRFS);
   const [vendors, setVendors] = useState(MOCK_VENDORS);
 
-  const pageTitle = { prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", documents: "Documents" };
+  const pageTitle = { prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders" };
 
   const handleVendorUpdate = (updatedVendor) => {
     setVendors((prev) => prev.map((v) => (v.name === updatedVendor.name ? updatedVendor : v)));
@@ -2096,7 +2049,6 @@ export default function App() {
       case "prfs": return <PRFsPage prfs={prfs} onSelectPrf={setSelectedPrf} />;
       case "vendors": return <VendorsPage onSelectVendor={setSelectedVendor} />;
       case "orders": return <PurchaseOrdersPage prfs={prfs} />;
-      case "documents": return <DocumentsPage prfs={prfs} />;
       default: return null;
     }
   };
