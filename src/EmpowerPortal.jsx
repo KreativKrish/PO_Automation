@@ -11,7 +11,7 @@ const MOCK_PRFS = [
     vendorName: "CloudHost Solutions",
     vendorCode: "VND-0412",
     vendorStatus: "existing",
-    status: "new",
+    status: "prf_submitted",
     pan: "ABCDE1234F",
     gstin: "18ABCDE1234F1Z5",
     servicePeriod: { from: "2025-04-01", to: "2025-06-30" },
@@ -27,12 +27,15 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-01-28T09:14:00Z",
     updatedAt: "2026-02-01T14:30:00Z",
+    buHead: "Kavita Rooj",
+    currentApprover: null,
+    approvals: [],
     remarks: [
       { by: "System", at: "2026-01-28T09:14:00Z", text: "PRF auto-detected and ingested." },
       { by: "System", at: "2026-01-28T09:15:00Z", text: "Vendor validated – existing in SAGE." },
     ],
     history: [
-      { status: "New", at: "2026-01-28T09:14:00Z" },
+      { status: "PRF Submitted", at: "2026-01-28T09:14:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-28T09:14:00Z" },
@@ -49,31 +52,42 @@ const MOCK_PRFS = [
     vendorName: "DevTools Inc",
     vendorCode: null,
     vendorStatus: "new_pending",
-    status: "pending",
+    status: "under_finance_approval",
     pan: "FGHIJ5678K",
     gstin: null,
-    servicePeriod: { from: "2025-03-15", to: "2025-05-14" },
-    purpose: "Mobile testing & QA tooling licence",
-    qty: 12,
-    rate: 4200,
-    poValueExGst: 50400,
-    gstAmount: 9072,
-    totalPoValue: 59472,
-    glCode: "GL-5034",
+    servicePeriod: { from: "2025-05-01", to: "2025-08-31" },
+    purpose: "Mobile app development tools & licenses",
+    qty: 10,
+    rate: 12000,
+    poValueExGst: 120000,
+    gstAmount: 21600,
+    totalPoValue: 141600,
+    glCode: "GL-5035",
     nature: "Software",
     poNumber: null,
     poDate: null,
     createdAt: "2026-01-30T11:22:00Z",
-    updatedAt: "2026-01-30T11:23:00Z",
+    updatedAt: "2026-02-03T09:45:00Z",
+    buHead: "Anmol Mathur",
+    currentApprover: "Head of Finance",
+    approvals: [
+      { role: "BU Head", name: "Anmol Mathur", status: "approved", at: "2026-01-30T14:00:00Z", remarks: "Approved. Critical for mobile team." },
+      { role: "Head of Finance", name: "Vijaytha Ail", status: "pending", at: null, remarks: null },
+    ],
     remarks: [
-      { by: "System", at: "2026-01-30T11:22:00Z", text: "PRF auto-detected." },
-      { by: "System", at: "2026-01-30T11:23:00Z", text: "Vendor not found – VRF/VIF triggered." },
+      { by: "System", at: "2026-01-30T11:22:00Z", text: "PRF auto-detected and ingested." },
+      { by: "System", at: "2026-01-30T11:23:00Z", text: "Vendor not found in SAGE. VRF/VIF required." },
+      { by: "System", at: "2026-01-30T14:00:00Z", text: "BU Head approved. Forwarded to Head of Finance." },
     ],
     history: [
-      { status: "New", at: "2026-01-30T11:22:00Z" },
-      { status: "Pending", at: "2026-01-30T11:23:00Z" },
+      { status: "PRF Submitted", at: "2026-01-30T11:22:00Z" },
+      { status: "Under Business Approval", at: "2026-01-30T11:23:00Z" },
+      { status: "Under Finance Approval", at: "2026-01-30T14:00:00Z" },
     ],
     docs: [{ name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-30T11:22:00Z" }],
+  },
+  {
+    id: "PRF-2526-003",
     requester: "Priya Nambiar",
     dept: "Content",
     costCode: "CC-3091",
@@ -81,7 +95,7 @@ const MOCK_PRFS = [
     vendorName: "MediaWorks Studio",
     vendorCode: "VND-0198",
     vendorStatus: "existing",
-    status: "closed",
+    status: "closed",  // PRF-20
     pan: "LMNOP9012Q",
     gstin: "18LMNOP9012Q1Z5",
     servicePeriod: { from: "2025-02-01", to: "2025-04-30" },
@@ -97,15 +111,23 @@ const MOCK_PRFS = [
     poDate: "2026-02-02",
     createdAt: "2026-01-25T08:00:00Z",
     updatedAt: "2026-02-02T10:15:00Z",
+    buHead: "Pooja Bhushan",
+    currentApprover: null,
+    approvals: [
+      { role: "BU Head", name: "Pooja Bhushan", status: "approved", at: "2026-01-26T10:00:00Z", remarks: "Approved. Vendor is established." },
+      { role: "Head of Finance", name: "Vijaytha Ail", status: "approved", at: "2026-02-01T09:00:00Z", remarks: "Budget confirmed." },
+      { role: "COO", name: "JD", status: "approved", at: "2026-02-02T10:00:00Z", remarks: "Approved. Go ahead." },
+    ],
     remarks: [
       { by: "System", at: "2026-01-25T08:00:00Z", text: "PRF auto-detected and ingested." },
       { by: "Vivek", at: "2026-02-02T10:10:00Z", text: "All details verified. Approved for PO generation." },
       { by: "System", at: "2026-02-02T10:15:00Z", text: "PO generated and sent to requester." },
     ],
     history: [
-      { status: "New", at: "2026-01-25T08:00:00Z" },
-      { status: "Approved", at: "2026-02-02T10:10:00Z" },
-      { status: "Closed / PO Sent", at: "2026-02-02T10:15:00Z" },
+      { status: "PRF Submitted", at: "2026-01-25T08:00:00Z" },
+      { status: "PRF Approved", at: "2026-02-02T10:10:00Z" },
+      { status: "PO Issued", at: "2026-02-02T10:15:00Z" },
+      { status: "Closed", at: "2026-02-02T10:30:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-25T08:00:00Z" },
@@ -124,7 +146,7 @@ const MOCK_PRFS = [
     vendorName: "FinSoft Ltd",
     vendorCode: "VND-0301",
     vendorStatus: "existing",
-    status: "rejected",
+    status: "prf_rejected",
     pan: "RSTUV3456W",
     gstin: "18RSTUV3456W1Z5",
     servicePeriod: { from: "2025-04-01", to: "2025-03-31" },
@@ -140,13 +162,19 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-01-22T16:45:00Z",
     updatedAt: "2026-01-29T11:00:00Z",
+    buHead: "Vijaytha Ail",
+    currentApprover: null,
+    approvals: [
+      { role: "BU Head", name: "Vijaytha Ail", status: "approved", at: "2026-01-23T09:00:00Z", remarks: "Self-approved as Finance BU Head." },
+      { role: "Head of Finance", name: "Vijaytha Ail", status: "rejected", at: "2026-01-29T11:00:00Z", remarks: "Service period dates are invalid. Please correct and resubmit." },
+    ],
     remarks: [
       { by: "System", at: "2026-01-22T16:45:00Z", text: "PRF auto-detected." },
       { by: "Vivek", at: "2026-01-29T11:00:00Z", text: "Service period dates are invalid – 'To' date is before 'From' date. Please correct and resubmit." },
     ],
     history: [
-      { status: "New", at: "2026-01-22T16:45:00Z" },
-      { status: "Declined / Rejected", at: "2026-01-29T11:00:00Z" },
+      { status: "PRF Submitted", at: "2026-01-22T16:45:00Z" },
+      { status: "PRF Rejected", at: "2026-01-29T11:00:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-22T16:45:00Z" },
@@ -162,7 +190,7 @@ const MOCK_PRFS = [
     vendorName: "PixelCraft Agency",
     vendorCode: "VND-0505",
     vendorStatus: "existing",
-    status: "approved",
+    status: "prf_approved",
     pan: "XYZAB7890C",
     gstin: "18XYZAB7890C1Z5",
     servicePeriod: { from: "2025-02-10", to: "2025-05-09" },
@@ -178,13 +206,20 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-01-18T10:00:00Z",
     updatedAt: "2026-01-31T15:20:00Z",
+    buHead: "Kavita Rooj",
+    currentApprover: null,
+    approvals: [
+      { role: "BU Head", name: "Kavita Rooj", status: "approved", at: "2026-01-20T11:00:00Z", remarks: "Brand refresh is priority. Approved." },
+      { role: "Head of Finance", name: "Vijaytha Ail", status: "approved", at: "2026-01-25T14:00:00Z", remarks: "Within marketing budget. Approved." },
+      { role: "COO", name: "JD", status: "approved", at: "2026-01-31T15:15:00Z", remarks: "Approved." },
+    ],
     remarks: [
       { by: "System", at: "2026-01-18T10:00:00Z", text: "PRF auto-detected." },
       { by: "Vivek", at: "2026-01-31T15:15:00Z", text: "Approved. PO generation pending." },
     ],
     history: [
-      { status: "New", at: "2026-01-18T10:00:00Z" },
-      { status: "Approved", at: "2026-01-31T15:15:00Z" },
+      { status: "PRF Submitted", at: "2026-01-18T10:00:00Z" },
+      { status: "PRF Approved", at: "2026-01-31T15:15:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-01-18T10:00:00Z" },
@@ -201,7 +236,7 @@ const MOCK_PRFS = [
     vendorName: "LogiTech Solutions",
     vendorCode: "VND-0678",
     vendorStatus: "existing",
-    status: "new",
+    status: "prf_submitted",
     pan: "QWERT1234Z",
     gstin: "18QWERT1234Z1Z5",
     servicePeriod: { from: "2025-03-01", to: "2025-08-31" },
@@ -217,11 +252,14 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-02-03T08:30:00Z",
     updatedAt: "2026-02-03T08:30:00Z",
+    buHead: "Roshan Pinto",
+    currentApprover: null,
+    approvals: [],
     remarks: [
       { by: "System", at: "2026-02-03T08:30:00Z", text: "PRF auto-detected and ingested." },
     ],
     history: [
-      { status: "New", at: "2026-02-03T08:30:00Z" },
+      { status: "PRF Submitted", at: "2026-02-03T08:30:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-02-03T08:30:00Z" },
@@ -236,7 +274,7 @@ const MOCK_PRFS = [
     vendorName: "SkillUp Academy",
     vendorCode: null,
     vendorStatus: "new_pending",
-    status: "pending",
+    status: "vendor_info_requested",
     pan: "ASDFG5678H",
     gstin: null,
     servicePeriod: { from: "2025-04-01", to: "2025-06-30" },
@@ -252,13 +290,16 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-02-02T14:20:00Z",
     updatedAt: "2026-02-02T14:21:00Z",
+    buHead: "Rinki Prasad",
+    currentApprover: null,
+    approvals: [],
     remarks: [
       { by: "System", at: "2026-02-02T14:20:00Z", text: "PRF auto-detected." },
       { by: "System", at: "2026-02-02T14:21:00Z", text: "Vendor not found – VRF/VIF triggered." },
     ],
     history: [
-      { status: "New", at: "2026-02-02T14:20:00Z" },
-      { status: "Pending", at: "2026-02-02T14:21:00Z" },
+      { status: "PRF Submitted", at: "2026-02-02T14:20:00Z" },
+      { status: "Vendor Information Requested", at: "2026-02-02T14:21:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-02-02T14:20:00Z" },
@@ -274,7 +315,7 @@ const MOCK_PRFS = [
     vendorName: "SecureNet Systems",
     vendorCode: null,
     vendorStatus: "new_pending",
-    status: "new",
+    status: "prf_submitted",
     pan: "ZXCVB9876M",
     gstin: "18ZXCVB9876M1Z5",
     servicePeriod: { from: "2025-02-15", to: "2025-12-31" },
@@ -290,11 +331,14 @@ const MOCK_PRFS = [
     poDate: null,
     createdAt: "2026-02-03T10:15:00Z",
     updatedAt: "2026-02-03T10:15:00Z",
+    buHead: "Anmol Mathur",
+    currentApprover: null,
+    approvals: [],
     remarks: [
       { by: "System", at: "2026-02-03T10:15:00Z", text: "PRF auto-detected and ingested." },
     ],
     history: [
-      { status: "New", at: "2026-02-03T10:15:00Z" },
+      { status: "PRF Submitted", at: "2026-02-03T10:15:00Z" },
     ],
     docs: [
       { name: "Approved PRF", type: "prf", url: "#", source: "PRF Form", uploadedAt: "2026-02-03T10:15:00Z" },
@@ -424,14 +468,41 @@ const MOCK_VENDORS = [
   },
 ];
 
-// ─── STATUS CONFIG ────────────────────────────────────────────────────────────
+// ─── STATUS CONFIG (20-Stage PRF Lifecycle) ──────────────────────────────────
 const STATUS_MAP = {
-  new: { label: "New", color: "#60a5fa", bg: "#dbeafe" },
-  pending: { label: "Pending", color: "#fb923c", bg: "#ffedd5" },
-  approved: { label: "Approved", color: "#34d399", bg: "#d1fae5" },
-  closed: { label: "Closed / PO Sent", color: "#14b8a6", bg: "#ccfbf1" },
-  rejected: { label: "Declined / Rejected", color: "#f87171", bg: "#fee2e2" },
+  prf_submitted: { label: "PRF Submitted", color: "#60a5fa", bg: "#dbeafe", stage: "PRF-01", phase: "submission" },
+  under_business_approval: { label: "Under Business Approval", color: "#f59e0b", bg: "#fef3c7", stage: "PRF-02", phase: "approval" },
+  under_finance_approval: { label: "Under Finance Approval", color: "#f59e0b", bg: "#fef3c7", stage: "PRF-03", phase: "approval" },
+  under_executive_approval: { label: "Under Executive Approval", color: "#f59e0b", bg: "#fef3c7", stage: "PRF-04", phase: "approval" },
+  prf_approved: { label: "PRF Approved", color: "#16a34a", bg: "#dcfce7", stage: "PRF-05", phase: "approval" },
+  prf_rejected: { label: "PRF Rejected", color: "#ef4444", bg: "#fee2e2", stage: "PRF-06", phase: "approval" },
+  received_for_processing: { label: "Received for Processing", color: "#3b82f6", bg: "#dbeafe", stage: "PRF-07", phase: "processing" },
+  vendor_verification: { label: "Vendor Verification in Progress", color: "#8b5cf6", bg: "#ede9fe", stage: "PRF-08", phase: "processing" },
+  vendor_info_requested: { label: "Vendor Information Requested", color: "#fb923c", bg: "#ffedd5", stage: "PRF-09", phase: "processing" },
+  vendor_details_review: { label: "Vendor Details Under Review", color: "#a78bfa", bg: "#ede9fe", stage: "PRF-10", phase: "processing" },
+  vendor_creation: { label: "Vendor Creation in Progress", color: "#6366f1", bg: "#e0e7ff", stage: "PRF-11", phase: "processing" },
+  vendor_activated: { label: "Vendor Activated", color: "#14b8a6", bg: "#ccfbf1", stage: "PRF-12", phase: "processing" },
+  under_finance_review: { label: "Under Finance Review", color: "#ec4899", bg: "#fce7f3", stage: "PRF-13", phase: "processing" },
+  changes_requested: { label: "Changes Requested", color: "#f97316", bg: "#fff7ed", stage: "PRF-14", phase: "processing" },
+  approved_for_po: { label: "Approved for PO Issuance", color: "#22c55e", bg: "#dcfce7", stage: "PRF-15", phase: "po_generation" },
+  processing_rejected: { label: "Processing Rejected", color: "#ef4444", bg: "#fee2e2", stage: "PRF-16", phase: "processing" },
+  po_generation: { label: "PO Generation in Progress", color: "#0ea5e9", bg: "#e0f2fe", stage: "PRF-17", phase: "po_generation" },
+  po_issued: { label: "PO Issued", color: "#10b981", bg: "#d1fae5", stage: "PRF-18", phase: "po_generation" },
+  po_dispatched: { label: "PO Dispatched", color: "#059669", bg: "#d1fae5", stage: "PRF-19", phase: "closure" },
+  closed: { label: "Closed", color: "#6b7280", bg: "#f3f4f6", stage: "PRF-20", phase: "closure" },
 };
+
+// Phases for the top-level progress tracker (groups the 20 stages)
+const STATUS_PHASES = [
+  { key: "submission", label: "Submission", stages: ["prf_submitted"] },
+  { key: "approval", label: "Approval", stages: ["under_business_approval", "under_finance_approval", "under_executive_approval", "prf_approved", "prf_rejected"] },
+  { key: "processing", label: "Processing", stages: ["received_for_processing", "vendor_verification", "vendor_info_requested", "vendor_details_review", "vendor_creation", "vendor_activated", "under_finance_review", "changes_requested", "processing_rejected"] },
+  { key: "po_generation", label: "PO Generation", stages: ["approved_for_po", "po_generation", "po_issued"] },
+  { key: "closure", label: "Closure", stages: ["po_dispatched", "closed"] },
+];
+
+// For the progress tracker bar
+const STATUS_LIFECYCLE = STATUS_PHASES.map(p => p.label);
 
 const VENDOR_STATUS_MAP = {
   existing: { label: "Existing", color: "#16a34a", bg: "#dcfce7" },
@@ -440,8 +511,6 @@ const VENDOR_STATUS_MAP = {
   pending_sage: { label: "Pending - SAGE", color: "#3b82f6", bg: "#dbeafe" },
   created: { label: "Created", color: "#14b8a6", bg: "#ccfbf1" },
 };
-
-const STATUS_LIFECYCLE = ["New", "Pending", "Approved", "Closed / PO Sent"];
 
 // ─── PRF APPROVAL CONFIG ─────────────────────────────────────────────────────
 const BU_OWNERS = [
@@ -485,126 +554,6 @@ const APPROVAL_STATUS_MAP = {
   commented: { label: "Commented", color: "#8b5cf6", bg: "#ede9fe" },
 };
 
-const MOCK_APPROVAL_PRFS = [
-  {
-    id: "PRF-2526-101",
-    requester: "Neha Kapoor",
-    bu: "HR Head",
-    buHead: "Rinki Prasad",
-    purpose: "Employee Training Program – Leadership Series",
-    amount: 75000,
-    submittedAt: "2026-02-20T09:00:00Z",
-    status: "awaiting_approval",
-    currentApprover: "Head of Finance",
-    approvals: [
-      { role: "BU Head", name: "Rinki Prasad", status: "approved", at: "2026-02-20T11:30:00Z", remarks: "Approved. Training budget allocated." },
-      { role: "Head of Finance", name: "Vijaytha Ail", status: "pending", at: null, remarks: null },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-20T09:00:00Z" },
-      { name: "Training Proposal", type: "vendor", url: "#", uploadedAt: "2026-02-20T09:00:00Z" },
-    ],
-  },
-  {
-    id: "PRF-2526-102",
-    requester: "Rajesh Kumar",
-    bu: "Tech",
-    buHead: "Anmol Mathur",
-    purpose: "Cloud Infrastructure Upgrade – AWS Migration Phase 2",
-    amount: 450000,
-    submittedAt: "2026-02-18T14:20:00Z",
-    status: "awaiting_approval",
-    currentApprover: "COO",
-    approvals: [
-      { role: "BU Head", name: "Anmol Mathur", status: "approved", at: "2026-02-18T16:45:00Z", remarks: "Critical for Q4 delivery. Approved." },
-      { role: "Head of Finance", name: "Vijaytha Ail", status: "approved", at: "2026-02-19T10:15:00Z", remarks: "Budget confirmed. Approved." },
-      { role: "COO", name: "JD", status: "pending", at: null, remarks: null },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-18T14:20:00Z" },
-      { name: "AWS Cost Estimate", type: "vendor", url: "#", uploadedAt: "2026-02-18T14:20:00Z" },
-      { name: "Migration Plan", type: "vendor", url: "#", uploadedAt: "2026-02-18T14:20:00Z" },
-    ],
-  },
-  {
-    id: "PRF-2526-103",
-    requester: "Kavita Rooj",
-    bu: "Marketing Head",
-    buHead: "Kavita Rooj",
-    purpose: "Annual Brand Campaign – Multi-Channel Media Buy",
-    amount: 1500000,
-    submittedAt: "2026-02-15T10:00:00Z",
-    status: "awaiting_approval",
-    currentApprover: "CEO",
-    approvals: [
-      { role: "BU Head", name: "Kavita Rooj", status: "approved", at: "2026-02-15T10:30:00Z", remarks: "Self-approved as BU Head." },
-      { role: "Head of Finance", name: "Vijaytha Ail", status: "approved", at: "2026-02-16T09:00:00Z", remarks: "Budget within annual allocation." },
-      { role: "COO", name: "JD", status: "approved", at: "2026-02-17T14:30:00Z", remarks: "Verified ROI projections. Go ahead." },
-      { role: "CEO", name: "Shantanu", status: "pending", at: null, remarks: null },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-15T10:00:00Z" },
-      { name: "Media Plan Deck", type: "vendor", url: "#", uploadedAt: "2026-02-15T10:00:00Z" },
-      { name: "ROI Projections", type: "vendor", url: "#", uploadedAt: "2026-02-15T10:00:00Z" },
-    ],
-  },
-  {
-    id: "PRF-2526-104",
-    requester: "Silviya Babu",
-    bu: "PBD (Ops)",
-    buHead: "Silviya Babu",
-    purpose: "Office Furniture Procurement – New Floor Setup",
-    amount: 85000,
-    submittedAt: "2026-02-12T11:00:00Z",
-    status: "approved",
-    currentApprover: null,
-    approvals: [
-      { role: "BU Head", name: "Silviya Babu", status: "approved", at: "2026-02-12T11:30:00Z", remarks: "Self-approved as BU Head." },
-      { role: "Head of Finance", name: "Vijaytha Ail", status: "approved", at: "2026-02-13T08:45:00Z", remarks: "Within ops budget. Approved." },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-12T11:00:00Z" },
-      { name: "Vendor Quotation", type: "vendor", url: "#", uploadedAt: "2026-02-12T11:00:00Z" },
-    ],
-  },
-  {
-    id: "PRF-2526-105",
-    requester: "Roshan Pinto",
-    bu: "Enterprise (Ops Head)",
-    buHead: "Roshan Pinto",
-    purpose: "CRM License Renewal – Salesforce Enterprise",
-    amount: 320000,
-    submittedAt: "2026-02-10T09:30:00Z",
-    status: "rejected",
-    currentApprover: null,
-    approvals: [
-      { role: "BU Head", name: "Roshan Pinto", status: "approved", at: "2026-02-10T09:45:00Z", remarks: "Annual renewal – critical for ops." },
-      { role: "Head of Finance", name: "Vijaytha Ail", status: "rejected", at: "2026-02-11T11:00:00Z", remarks: "Budget exceeded for current quarter. Please resubmit in Q2 with revised allocation." },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-10T09:30:00Z" },
-      { name: "Salesforce Invoice", type: "vendor", url: "#", uploadedAt: "2026-02-10T09:30:00Z" },
-    ],
-  },
-  {
-    id: "PRF-2526-106",
-    requester: "Varun Maheshwari",
-    bu: "Impact (Sales)",
-    buHead: "Varun Maheshwari",
-    purpose: "Event Management – Annual Partner Summit 2026",
-    amount: 280000,
-    submittedAt: "2026-02-21T10:00:00Z",
-    status: "commented",
-    currentApprover: "BU Head",
-    approvals: [
-      { role: "BU Head", name: "Varun Maheshwari", status: "commented", at: "2026-02-21T14:00:00Z", remarks: "Need detailed venue comparison before approving. Please share 3 venue quotes." },
-    ],
-    docs: [
-      { name: "PRF Form", type: "prf", url: "#", uploadedAt: "2026-02-21T10:00:00Z" },
-      { name: "Event Brief", type: "vendor", url: "#", uploadedAt: "2026-02-21T10:00:00Z" },
-    ],
-  },
-];
 
 // ─── ICONS (inline SVGs) ─────────────────────────────────────────────────────
 const Icon = ({ name, size = 18, color = "currentColor", ...props }) => {
@@ -693,7 +642,7 @@ const T = {
 // ═══════════════════════════════════════════════════════════════════════════════
 const NAV_ITEMS = [
   { key: "prfs", label: "PRFs", icon: "prfs", badge: 2 },
-  { key: "approvals", label: "PRF Approvals", icon: "shield", badge: 3 },
+
   { key: "vendors", label: "Vendors", icon: "vendors" },
   { key: "orders", label: "Purchase Orders", icon: "orders" },
 ];
@@ -808,29 +757,45 @@ function CardHeader({ icon, title, action }) {
 function PRFsPage({ prfs, onSelectPrf }) {
   const [expandedId, setExpandedId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
+  const [filterBU, setFilterBU] = useState("all");
+  const [filterVendorStatus, setFilterVendorStatus] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
   const [showVendorPendingModal, setShowVendorPendingModal] = useState(false);
   const [emailSending, setEmailSending] = useState({});
 
-  const filtered = filterStatus === "all" ? prfs : prfs.filter((p) => p.status === filterStatus);
+  // Unique BU (department) list
+  const buList = [...new Set(prfs.map((p) => p.dept))].sort();
+
+  // Multi-criteria filtering
+  let filtered = prfs;
+  if (filterStatus !== "all") filtered = filtered.filter((p) => p.status === filterStatus);
+  if (filterBU !== "all") filtered = filtered.filter((p) => p.dept === filterBU);
+  if (filterVendorStatus !== "all") filtered = filtered.filter((p) => p.vendorStatus === filterVendorStatus);
+  if (filterDateFrom) filtered = filtered.filter((p) => p.createdAt >= filterDateFrom);
+  if (filterDateTo) filtered = filtered.filter((p) => p.createdAt <= filterDateTo + "T23:59:59Z");
+
+  const activeFilterCount = [filterStatus !== "all", filterBU !== "all", filterVendorStatus !== "all", !!filterDateFrom, !!filterDateTo].filter(Boolean).length;
+
+  const clearAllFilters = () => { setFilterStatus("all"); setFilterBU("all"); setFilterVendorStatus("all"); setFilterDateFrom(""); setFilterDateTo(""); };
 
   const docColor = (type) => ({ prf: T.primary, vendor: T.accent, po: "#34d399" }[type] || T.textSub);
   const docBg = (type) => ({ prf: "#dbeafe", vendor: "#fff7ed", po: "#d1fae5" }[type] || T.bg);
 
   // Get vendor pending PRFs
-  const vendorPendingPrfs = prfs.filter((p) => p.status === "vendor_validation" || p.vendorStatus === "new_pending");
+  const vendorPendingPrfs = prfs.filter((p) => p.status === "vendor_info_requested" || p.status === "vendor_verification" || p.vendorStatus === "new_pending");
 
   // summary counts used by the stat row
   const stats = [
     { label: "Total PRFs", value: prfs.length, icon: "prfs", color: "#60a5fa", bg: "#dbeafe", clickable: false },
-    { label: "Pending Review", value: prfs.filter((p) => p.status === "pending_review").length, icon: "clock", color: "#fb923c", bg: "#ffedd5", clickable: false },
+    { label: "Under Approval", value: prfs.filter((p) => ["under_business_approval", "under_finance_approval", "under_executive_approval"].includes(p.status)).length, icon: "clock", color: "#f59e0b", bg: "#fef3c7", clickable: false },
     { label: "Vendor Pending", value: vendorPendingPrfs.length, icon: "vendors", color: "#a78bfa", bg: "#ede9fe", clickable: true, onClick: () => setShowVendorPendingModal(true) },
-    { label: "PO Generated", value: prfs.filter((p) => p.status === "po_generated" || p.status === "approved").length, icon: "orders", color: "#34d399", bg: "#d1fae5", clickable: false },
+    { label: "PO Generated", value: prfs.filter((p) => ["po_issued", "po_dispatched", "closed"].includes(p.status)).length, icon: "orders", color: "#34d399", bg: "#d1fae5", clickable: false },
   ];
 
   const handleSendEmail = (prf) => {
     setEmailSending(prev => ({ ...prev, [prf.id]: true }));
-
-    // Simulate email sending
     setTimeout(() => {
       setEmailSending(prev => ({ ...prev, [prf.id]: false }));
       alert(`✓ Email sent to ${prf.requester} with VRF submission link for ${prf.vendorName}`);
@@ -839,12 +804,26 @@ function PRFsPage({ prfs, onSelectPrf }) {
 
   const statusFilters = [
     { key: "all", label: "All" },
-    { key: "new", label: "New" },
-    { key: "vendor_validation", label: "Vendor Validation" },
-    { key: "pending_review", label: "Pending Review" },
-    { key: "rejected", label: "Rejected" },
-    { key: "approved", label: "Approved" },
-    { key: "po_generated", label: "PO Generated" },
+    { key: "prf_submitted", label: "PRF Submitted" },
+    { key: "under_business_approval", label: "Under Business Approval" },
+    { key: "under_finance_approval", label: "Under Finance Approval" },
+    { key: "under_executive_approval", label: "Under Executive Approval" },
+    { key: "prf_approved", label: "PRF Approved" },
+    { key: "prf_rejected", label: "PRF Rejected" },
+    { key: "received_for_processing", label: "Received for Processing" },
+    { key: "vendor_verification", label: "Vendor Verification" },
+    { key: "vendor_info_requested", label: "Vendor Info Requested" },
+    { key: "vendor_details_review", label: "Vendor Details Review" },
+    { key: "vendor_creation", label: "Vendor Creation" },
+    { key: "vendor_activated", label: "Vendor Activated" },
+    { key: "under_finance_review", label: "Under Finance Review" },
+    { key: "changes_requested", label: "Changes Requested" },
+    { key: "approved_for_po", label: "Approved for PO" },
+    { key: "processing_rejected", label: "Processing Rejected" },
+    { key: "po_generation", label: "PO Generation" },
+    { key: "po_issued", label: "PO Issued" },
+    { key: "po_dispatched", label: "PO Dispatched" },
+    { key: "closed", label: "Closed" },
   ];
 
   return (
@@ -880,27 +859,109 @@ function PRFsPage({ prfs, onSelectPrf }) {
         ))}
       </div>
 
-      {/* ── Status filter pills ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-        {statusFilters.map((f) => (
-          <button key={f.key} onClick={() => setFilterStatus(f.key)}
-            style={{
-              background: filterStatus === f.key ? T.primary : "#fff",
-              color: filterStatus === f.key ? "#fff" : T.textSub,
-              border: `1px solid ${filterStatus === f.key ? T.primary : T.cardBorder}`,
-              borderRadius: 20, padding: "5px 14px", fontSize: 12.5,
-              fontWeight: filterStatus === f.key ? 600 : 500, cursor: "pointer",
-              transition: "all .15s",
-            }}>
-            {f.label}
-            {f.key !== "all" && (
-              <span style={{ marginLeft: 5, opacity: 0.75 }}>
-                ({prfs.filter((p) => p.status === f.key).length})
-              </span>
+      {/* ── Filter Button ── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={() => setShowFilters(!showFilters)} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: showFilters ? T.primary : "#fff", color: showFilters ? "#fff" : T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "7px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", position: "relative" }}>
+            <Icon name="filter" size={16} color={showFilters ? "#fff" : T.primary} />
+            Filters {showFilters ? "▲" : "▼"}
+            {activeFilterCount > 0 && (
+              <span style={{ position: "absolute", top: -6, right: -6, background: T.danger, color: "#fff", fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>{activeFilterCount}</span>
             )}
           </button>
-        ))}
+          {activeFilterCount > 0 && (
+            <button onClick={clearAllFilters} style={{ background: "none", border: `1px solid ${T.cardBorder}`, borderRadius: 7, padding: "6px 12px", fontSize: 12, color: T.textSub, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+              <Icon name="x" size={12} color={T.textSub} /> Clear All
+            </button>
+          )}
+        </div>
+        <span style={{ fontSize: 12, color: T.textSub }}>{filtered.length} of {prfs.length} PRFs</span>
       </div>
+
+      {/* ── Filter Panel ── */}
+      {showFilters && (
+        <Card style={{ padding: "18px 22px", marginBottom: 18, background: "#f7fafd" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
+            {/* Status Filter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Icon name="check" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                Status
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {statusFilters.map((f) => (
+                  <label key={f.key} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: filterStatus === f.key ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                    <input type="radio" name="prfStatus" checked={filterStatus === f.key} onChange={() => setFilterStatus(f.key)} style={{ cursor: "pointer", accentColor: T.primary }} />
+                    <span style={{ fontSize: 12.5, fontWeight: filterStatus === f.key ? 600 : 400, color: filterStatus === f.key ? T.primary : T.textMain }}>
+                      {f.label}
+                      {f.key !== "all" && <span style={{ opacity: 0.6, marginLeft: 4 }}>({prfs.filter((p) => p.status === f.key).length})</span>}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Date Filter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Icon name="clock" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                Date Submitted
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div>
+                  <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, display: "block", marginBottom: 3 }}>From</label>
+                  <input type="date" value={filterDateFrom} onChange={(e) => setFilterDateFrom(e.target.value)} style={{ width: "100%", padding: "6px 10px", border: `1px solid ${T.cardBorder}`, borderRadius: 6, fontSize: 12.5, outline: "none", fontFamily: "inherit", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, display: "block", marginBottom: 3 }}>To</label>
+                  <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} style={{ width: "100%", padding: "6px 10px", border: `1px solid ${T.cardBorder}`, borderRadius: 6, fontSize: 12.5, outline: "none", fontFamily: "inherit", boxSizing: "border-box" }} />
+                </div>
+              </div>
+            </div>
+
+            {/* BU / Department Filter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Icon name="vendors" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                Business Unit
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: filterBU === "all" ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                  <input type="radio" name="prfBU" checked={filterBU === "all"} onChange={() => setFilterBU("all")} style={{ cursor: "pointer", accentColor: T.primary }} />
+                  <span style={{ fontSize: 12.5, fontWeight: filterBU === "all" ? 600 : 400, color: filterBU === "all" ? T.primary : T.textMain }}>All Departments</span>
+                </label>
+                {buList.map((bu) => (
+                  <label key={bu} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: filterBU === bu ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                    <input type="radio" name="prfBU" checked={filterBU === bu} onChange={() => setFilterBU(bu)} style={{ cursor: "pointer", accentColor: T.primary }} />
+                    <span style={{ fontSize: 12.5, fontWeight: filterBU === bu ? 600 : 400, color: filterBU === bu ? T.primary : T.textMain }}>
+                      {bu} <span style={{ opacity: 0.6 }}>({prfs.filter((p) => p.dept === bu).length})</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Vendor Status Filter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Icon name="shield" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                Vendor Status
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {[{ key: "all", label: "All" }, { key: "existing", label: "Existing" }, { key: "new_pending", label: "New – Pending" }].map((f) => (
+                  <label key={f.key} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: filterVendorStatus === f.key ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                    <input type="radio" name="prfVendorStatus" checked={filterVendorStatus === f.key} onChange={() => setFilterVendorStatus(f.key)} style={{ cursor: "pointer", accentColor: T.primary }} />
+                    <span style={{ fontSize: 12.5, fontWeight: filterVendorStatus === f.key ? 600 : 400, color: filterVendorStatus === f.key ? T.primary : T.textMain }}>
+                      {f.label}
+                      {f.key !== "all" && <span style={{ opacity: 0.6, marginLeft: 4 }}>({prfs.filter((p) => p.vendorStatus === f.key).length})</span>}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* ── Table + expandable doc drawers ── */}
       <Card>
@@ -912,7 +973,7 @@ function PRFsPage({ prfs, onSelectPrf }) {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
               <tr style={{ background: T.bg }}>
-                {["", "PRF Ref No", "Requester", "Vendor Name", "Vendor Status", "Current Status", "PO Number", "Docs", "Action"].map((h) => (
+                {["", "PRF Ref No", "Requester", "Vendor Name", "Vendor Status", "Current Status", "Date Submitted", "PO Number", "Docs", "Action"].map((h) => (
                   <th key={h} style={{ textAlign: "left", padding: "10px 12px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr>
@@ -945,6 +1006,7 @@ function PRFsPage({ prfs, onSelectPrf }) {
                         </span>
                       </td>
                       <td style={{ padding: "11px 12px" }}><StatusBadge status={prf.status} /></td>
+                      <td style={{ padding: "11px 12px", color: T.textSub, fontSize: 12, whiteSpace: "nowrap" }}>{fmt(prf.createdAt)}</td>
                       <td style={{ padding: "11px 12px", color: T.textSub, fontSize: 12 }}>{prf.poNumber || "—"}</td>
 
                       {/* docs pill */}
@@ -968,7 +1030,7 @@ function PRFsPage({ prfs, onSelectPrf }) {
                     {/* ── expandable document drawer ── */}
                     {isOpen && (
                       <tr key={prf.id + "-docs"}>
-                        <td colSpan={9} style={{ padding: 0, background: "#f7fafd", borderBottom: `2px solid ${T.primary}33` }}>
+                        <td colSpan={10} style={{ padding: 0, background: "#f7fafd", borderBottom: `2px solid ${T.primary}33` }}>
                           {/* header strip */}
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 8px 48px", borderBottom: `1px solid ${T.cardBorder}` }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1171,31 +1233,63 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
     gstin: prf.gstin || "",
   });
 
-  const canEdit = prf.status === "new";
-  const isNewStatus = prf.status === "new";
+  const canEdit = prf.status === "prf_submitted";
+  const isNewStatus = prf.status === "prf_submitted";
+  const isAwaitingApproval = ["under_business_approval", "under_finance_approval", "under_executive_approval"].includes(prf.status);
+  const hasApprovals = prf.approvals && prf.approvals.length > 0;
 
   const poValueExGst = editData.qty * editData.rate;
   const gstAmount = Math.round(poValueExGst * 0.18);
   const totalPoValue = poValueExGst + gstAmount;
 
   const handleAction = (action) => {
-    if (!remarks.trim()) return;
+    if (action !== "save" && !remarks.trim()) return;
     const now = new Date().toISOString();
     const newRemarks = [...prf.remarks, { by: "Vivek", at: now, text: remarks || "Information updated." }];
     const newHistory = [...prf.history];
     let newStatus = prf.status;
+    let newApprovals = [...(prf.approvals || [])];
+    let newCurrentApprover = prf.currentApprover;
 
     if (action === "approve") {
-      newStatus = "approved";
-      newHistory.push({ status: "Approved", at: now });
+      newStatus = "prf_approved";
+      newHistory.push({ status: "PRF Approved", at: now });
     } else if (action === "reject") {
-      newStatus = "rejected";
-      newHistory.push({ status: "Rejected – Action Required", at: now });
+      newStatus = "prf_rejected";
+      newHistory.push({ status: "PRF Rejected", at: now });
     } else if (action === "edit") {
-      newStatus = "new";
-      newHistory.push({ status: "New (Edited)", at: now });
+      newStatus = "prf_submitted";
+      newHistory.push({ status: "PRF Submitted (Edited)", at: now });
     } else if (action === "remind") {
       newHistory.push({ status: "Reminder Sent", at: now });
+    } else if (action === "approve_prf") {
+      const pendingIdx = newApprovals.findIndex((a) => a.status === "pending");
+      if (pendingIdx >= 0) {
+        newApprovals[pendingIdx] = { ...newApprovals[pendingIdx], status: "approved", at: now, remarks: remarks };
+        const nextPending = newApprovals.findIndex((a, i) => i > pendingIdx && a.status === "pending");
+        if (nextPending >= 0) {
+          newCurrentApprover = newApprovals[nextPending].role;
+          newRemarks.push({ by: "System", at: now, text: `Approval by ${newApprovals[pendingIdx].name}. Forwarded to ${newApprovals[nextPending].name}.` });
+        } else {
+          newStatus = "prf_approved";
+          newCurrentApprover = null;
+          newHistory.push({ status: "PRF Approved", at: now });
+          newRemarks.push({ by: "System", at: now, text: "All approvals complete. PRF fully approved." });
+        }
+      }
+    } else if (action === "reject_prf") {
+      const pendingIdx = newApprovals.findIndex((a) => a.status === "pending");
+      if (pendingIdx >= 0) {
+        newApprovals[pendingIdx] = { ...newApprovals[pendingIdx], status: "rejected", at: now, remarks: remarks };
+      }
+      newStatus = "prf_rejected";
+      newCurrentApprover = null;
+      newHistory.push({ status: "PRF Rejected", at: now });
+    } else if (action === "comment_prf") {
+      const pendingIdx = newApprovals.findIndex((a) => a.status === "pending");
+      if (pendingIdx >= 0) {
+        newApprovals[pendingIdx] = { ...newApprovals[pendingIdx], status: "commented", at: now, remarks: remarks };
+      }
     }
 
     const updatedPrf = {
@@ -1208,6 +1302,8 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
       status: newStatus,
       remarks: newRemarks,
       history: newHistory,
+      approvals: newApprovals,
+      currentApprover: newCurrentApprover,
       updatedAt: now,
     };
 
@@ -1230,26 +1326,77 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
         </div>
       </div>
 
-      {/* Progress tracker */}
+      {/* Progress tracker (phase-based) */}
       <Card style={{ padding: "16px 22px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
-          {STATUS_LIFECYCLE.map((s, i) => {
-            const completed = prf.history.some((h) => h.status.startsWith(s.split(" ")[0]));
-            const isCurrent = prf.history[prf.history.length - 1]?.status.startsWith(s.split(" ")[0]);
+          {STATUS_PHASES.map((phase, i) => {
+            const currentPhase = STATUS_MAP[prf.status]?.phase;
+            const phaseIdx = STATUS_PHASES.findIndex(p => p.key === currentPhase);
+            const thisIdx = i;
+            const completed = thisIdx < phaseIdx || (thisIdx === phaseIdx && (prf.status === "closed" || prf.status === "prf_approved" || prf.status === "po_issued" || prf.status === "po_dispatched"));
+            const isCurrent = thisIdx === phaseIdx && !completed;
+            const isRejected = (prf.status === "prf_rejected" || prf.status === "processing_rejected") && thisIdx === phaseIdx;
+            const circleColor = isRejected ? "#ef4444" : completed ? T.primary : isCurrent ? T.primary : T.cardBorder;
+            const subStage = isCurrent || isRejected ? STATUS_MAP[prf.status] : null;
             return (
-              <div key={s} style={{ display: "flex", alignItems: "center", flex: i < STATUS_LIFECYCLE.length - 1 ? 1 : 0 }}>
+              <div key={phase.key} style={{ display: "flex", alignItems: "center", flex: i < STATUS_PHASES.length - 1 ? 1 : 0 }}>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", zIndex: 1 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: completed ? T.primary : T.cardBorder, border: isCurrent ? `3px solid ${T.primary}` : "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: isCurrent ? `0 0 0 3px ${T.primary}33` : "none", transition: "all .2s" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: circleColor, border: isCurrent ? `3px solid ${T.primary}` : isRejected ? "3px solid #ef4444" : "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: isCurrent ? `0 0 0 3px ${T.primary}33` : isRejected ? "0 0 0 3px #ef444433" : "none", transition: "all .2s" }}>
                     {completed && <Icon name="check" size={15} color="#fff" />}
+                    {isRejected && <span style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>✕</span>}
                   </div>
-                  <span style={{ fontSize: 10, marginTop: 6, color: completed ? T.primary : T.textSub, fontWeight: completed ? 600 : 400, textAlign: "center", maxWidth: 70, lineHeight: 1.3 }}>{s}</span>
+                  <span style={{ fontSize: 10, marginTop: 6, color: isRejected ? "#ef4444" : completed || isCurrent ? T.primary : T.textSub, fontWeight: completed || isCurrent ? 600 : 400, textAlign: "center", maxWidth: 80, lineHeight: 1.3 }}>{phase.label}</span>
+                  {subStage && <span style={{ fontSize: 9, marginTop: 2, color: isRejected ? "#ef4444" : T.accent, fontWeight: 600, textAlign: "center", maxWidth: 80, lineHeight: 1.2 }}>{subStage.stage}: {subStage.label}</span>}
                 </div>
-                {i < STATUS_LIFECYCLE.length - 1 && <div style={{ flex: 1, height: 2, background: completed ? T.primary : T.cardBorder, margin: "0 2px", marginBottom: 22 }} />}
+                {i < STATUS_PHASES.length - 1 && <div style={{ flex: 1, height: 2, background: thisIdx < phaseIdx ? T.primary : T.cardBorder, margin: "0 2px", marginBottom: subStage ? 36 : 22 }} />}
               </div>
             );
           })}
         </div>
       </Card>
+
+      {/* Approval Progress Stepper */}
+      {hasApprovals && (
+        <Card>
+          <CardHeader icon="shield" title="Approval Progress" action={
+            prf.currentApprover && <span style={{ fontSize: 12, color: T.accent, fontWeight: 600 }}>Current: {prf.currentApprover}</span>
+          } />
+          <div style={{ padding: "0 20px 18px" }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 0 }}>
+              {prf.approvals.map((a, i) => {
+                const colorMap = { approved: "#16a34a", rejected: "#ef4444", pending: "#9ca3af", commented: "#8b5cf6" };
+                const bgMap = { approved: "#dcfce7", rejected: "#fee2e2", pending: "#f3f4f6", commented: "#ede9fe" };
+                const iconMap = { approved: "check", rejected: "x", pending: "clock", commented: "message_square" };
+                const clr = colorMap[a.status] || "#9ca3af";
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center", flex: i < prf.approvals.length - 1 ? 1 : 0 }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 72 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: "50%", background: bgMap[a.status] || "#f3f4f6", border: `2.5px solid ${clr}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Icon name={iconMap[a.status] || "clock"} size={16} color={clr} />
+                      </div>
+                      <span style={{ fontSize: 10.5, fontWeight: 600, color: clr, marginTop: 5, textAlign: "center", lineHeight: 1.3 }}>{a.role}</span>
+                      <span style={{ fontSize: 9.5, color: T.textSub, textAlign: "center", lineHeight: 1.2 }}>{a.name}</span>
+                      {a.at && <span style={{ fontSize: 8.5, color: T.textSub, marginTop: 2 }}>{fmt(a.at)}</span>}
+                    </div>
+                    {i < prf.approvals.length - 1 && <div style={{ flex: 1, height: 2, background: a.status === "approved" ? "#16a34a" : T.cardBorder, margin: "0 4px", marginBottom: 36 }} />}
+                  </div>
+                );
+              })}
+            </div>
+            {prf.approvals.some(a => a.remarks) && (
+              <div style={{ marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.cardBorder}` }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 8 }}>Approver Remarks</div>
+                {prf.approvals.filter(a => a.remarks).map((a, i) => (
+                  <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 12.5 }}>
+                    <span style={{ fontWeight: 600, color: APPROVAL_STATUS_MAP[a.status]?.color || T.textSub, minWidth: 100 }}>{a.name}:</span>
+                    <span style={{ color: T.textMain }}>{a.remarks}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18 }}>
         {/* Left column */}
@@ -1423,16 +1570,34 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
                   )}
                 </>
               )}
+              {isAwaitingApproval && (
+                <>
+                  <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 7, padding: "8px 12px", fontSize: 12, color: "#92400e", display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                    <Icon name="clock" size={14} color="#92400e" /> Awaiting approval from: <strong>{prf.currentApprover}</strong>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => setShowModal("approve_prf")} style={{ flex: 1, background: "#16a34a", color: "#fff", border: "none", borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      ✓ Approve
+                    </button>
+                    <button onClick={() => setShowModal("reject_prf")} style={{ flex: 1, background: "#fff", color: T.danger, border: `1px solid ${T.danger}`, borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      ✕ Reject
+                    </button>
+                  </div>
+                  <button onClick={() => setShowModal("comment_prf")} style={{ background: "#fff", color: "#8b5cf6", border: "1px solid #8b5cf6", borderRadius: 7, padding: "7px 0", fontSize: 12.5, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <Icon name="message_square" size={13} color="#8b5cf6" /> Add Comment
+                  </button>
+                </>
+              )}
               {prf.vendorStatus !== "existing" && (
                 <button onClick={() => setShowModal("remind")} style={{ background: "#fff", color: T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                   <Icon name="mail" size={14} color={T.primary} /> Remind Requester
                 </button>
               )}
-              {!canEdit && prf.vendorStatus === "existing" && (
+              {!canEdit && !isAwaitingApproval && prf.vendorStatus === "existing" && (
                 <div style={{ fontSize: 13, color: T.textSub, textAlign: "center", padding: "12px 0" }}>No actions available for current status.</div>
               )}
-              {/* Remarks (mandatory for New actions) */}
-              {isNewStatus && (
+              {/* Remarks (mandatory for actions) */}
+              {(isNewStatus || isAwaitingApproval) && (
                 <div style={{ marginTop: 6 }}>
                   <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px" }}>Remarks <span style={{ color: T.danger }}>*</span></label>
                   <textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} placeholder="Add mandatory remarks…" rows={3} style={{ width: "100%", marginTop: 5, padding: "8px 10px", border: `1px solid ${T.cardBorder}`, borderRadius: 7, fontSize: 13, resize: "vertical", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }} />
@@ -1491,7 +1656,7 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
           <div style={{ background: "#fff", borderRadius: 12, width: 420, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,.2)" }}>
             <h3 style={{ margin: "0 0 6px", fontSize: 17, color: T.textMain }}>
-              {showModal === "approve" ? "Approve PRF" : showModal === "reject" ? "Reject PRF" : showModal === "save" ? "Save & Submit PRF" : showModal === "remind" ? "Send Reminder" : "Save Edits"}
+              {showModal === "approve" ? "Approve PRF" : showModal === "reject" ? "Reject PRF" : showModal === "save" ? "Save & Submit PRF" : showModal === "remind" ? "Send Reminder" : showModal === "approve_prf" ? "Approve PRF" : showModal === "reject_prf" ? "Reject PRF" : showModal === "comment_prf" ? "Add Comment" : "Save Edits"}
             </h3>
             <p style={{ margin: "0 0 14px", fontSize: 13, color: T.textSub }}>
               {showModal === "approve"
@@ -1502,7 +1667,13 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
                     ? "A reminder email will be sent to the requester."
                     : showModal === "save"
                       ? "PRF will be submitted for vendor validation. You won't be able to edit after submission."
-                      : "Edited details will be saved and status remains Pending Review."}
+                      : showModal === "approve_prf"
+                        ? `This will approve the current step. ${prf.currentApprover ? `Current approver: ${prf.currentApprover}` : ""}`
+                        : showModal === "reject_prf"
+                          ? "This will reject the PRF. The requester will be notified."
+                          : showModal === "comment_prf"
+                            ? "Add a comment for the requester to address before proceeding."
+                            : "Edited details will be saved and status remains Pending Review."}
             </p>
             {showModal !== "save" && !remarks.trim() && <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 7, padding: "8px 12px", fontSize: 12.5, color: "#92400e", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}><Icon name="alert" size={14} color="#92400e" /> Remarks are mandatory.</div>}
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 18 }}>
@@ -1511,7 +1682,7 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
                 onClick={() => handleAction(showModal)}
                 disabled={showModal !== "save" && !remarks.trim()}
                 style={{
-                  background: showModal === "reject" ? T.danger : T.primary,
+                  background: (showModal === "reject" || showModal === "reject_prf") ? T.danger : showModal === "comment_prf" ? "#8b5cf6" : showModal === "approve_prf" ? "#16a34a" : T.primary,
                   color: "#fff",
                   border: "none",
                   borderRadius: 7,
@@ -1521,7 +1692,7 @@ function PRFDetail({ prf, onBack, onUpdatePrf, onViewVendor }) {
                   cursor: (showModal === "save" || remarks.trim()) ? "pointer" : "not-allowed",
                   opacity: (showModal === "save" || remarks.trim()) ? 1 : 0.5
                 }}>
-                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : showModal === "save" ? "Submit PRF" : showModal === "remind" ? "Send Reminder" : "Confirm Edit"}
+                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : showModal === "save" ? "Submit PRF" : showModal === "remind" ? "Send Reminder" : showModal === "approve_prf" ? "Confirm Approval" : showModal === "reject_prf" ? "Confirm Rejection" : showModal === "comment_prf" ? "Submit Comment" : "Confirm Edit"}
               </button>
             </div>
           </div>
@@ -1548,48 +1719,75 @@ function VendorsPage({ onSelectVendor }) {
     filtered = filtered.filter((v) => v.type === typeFilter);
   }
 
+  const activeFilterCount = [statusFilter !== "all", typeFilter !== "all"].filter(Boolean).length;
+  const clearAllFilters = () => { setStatusFilter("all"); setTypeFilter("all"); };
+
+  const vendorStatuses = [
+    { key: "all", label: "All" },
+    { key: "active", label: "Active" },
+    { key: "approval_pending", label: "Approval Pending" },
+    { key: "pending_requester", label: "Pending - Requester" },
+    { key: "pending_sage", label: "Pending - SAGE" },
+    { key: "created", label: "Created" },
+  ];
+
   return (
     <div>
-      {/* Filter Controls */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, gap: 12, flexWrap: "wrap" }}>
-        {/* Status filters */}
+      {/* Filter Button Row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {["all", "active", "approval_pending", "pending_requester", "pending_sage", "created"].map((f) => (
-            <button key={f} onClick={() => setStatusFilter(f)} style={{ background: statusFilter === f ? T.primary : "#fff", color: statusFilter === f ? "#fff" : T.textSub, border: `1px solid ${statusFilter === f ? T.primary : T.cardBorder}`, borderRadius: 7, padding: "6px 14px", fontSize: 13, fontWeight: statusFilter === f ? 600 : 500, cursor: "pointer", transition: "all .15s" }}>
-              {f === "all" ? "All" : VENDOR_STATUS_MAP[f]?.label || f}
+          <button onClick={() => setShowFilters(!showFilters)} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: showFilters ? T.primary : "#fff", color: showFilters ? "#fff" : T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "7px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", position: "relative" }}>
+            <Icon name="filter" size={16} color={showFilters ? "#fff" : T.primary} />
+            Filters {showFilters ? "▲" : "▼"}
+            {activeFilterCount > 0 && (
+              <span style={{ position: "absolute", top: -6, right: -6, background: T.danger, color: "#fff", fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>{activeFilterCount}</span>
+            )}
+          </button>
+          {activeFilterCount > 0 && (
+            <button onClick={clearAllFilters} style={{ background: "none", border: `1px solid ${T.cardBorder}`, borderRadius: 7, padding: "6px 12px", fontSize: 12, color: T.textSub, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+              <Icon name="x" size={12} color={T.textSub} /> Clear All
             </button>
-          ))}
+          )}
         </div>
-
-        {/* Filters Button */}
-        <button onClick={() => setShowFilters(!showFilters)} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: showFilters ? T.primary : "#fff", color: showFilters ? "#fff" : T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "7px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s" }}>
-          <Icon name="filter" size={16} color={showFilters ? "#fff" : T.primary} />
-          Filters {showFilters ? "▲" : "▼"}
-        </button>
+        <span style={{ fontSize: 12, color: T.textSub }}>{filtered.length} of {MOCK_VENDORS.length} vendors</span>
       </div>
 
       {/* Expandable Filters Panel */}
       {showFilters && (
-        <Card style={{ padding: "18px 20px", marginBottom: 18, background: "#f7fafd" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 24 }}>
+        <Card style={{ padding: "18px 22px", marginBottom: 18, background: "#f7fafd" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            {/* Stage / Status Filter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Icon name="check" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                Stage
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {vendorStatuses.map((f) => (
+                  <label key={f.key} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: statusFilter === f.key ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                    <input type="radio" name="vendorStatus" checked={statusFilter === f.key} onChange={() => setStatusFilter(f.key)} style={{ cursor: "pointer", accentColor: T.primary }} />
+                    <span style={{ fontSize: 12.5, fontWeight: statusFilter === f.key ? 600 : 400, color: statusFilter === f.key ? T.primary : T.textMain }}>
+                      {f.label}
+                      {f.key !== "all" && <span style={{ opacity: 0.6, marginLeft: 4 }}>({MOCK_VENDORS.filter((v) => v.status === f.key).length})</span>}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
             {/* Type Filter */}
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                 <Icon name="vendors" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                Filter by Type
+                Type
               </div>
-              <div style={{ display: "flex", flexDirection: "row", gap: 8 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 {["all", "Teamlease Edtech", "Teamlease Foundation", "AIF"].map((type) => (
-                  <label key={type} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "6px 10px", borderRadius: 6, background: typeFilter === type ? T.primaryLight : "#fff", border: `1px solid ${typeFilter === type ? T.primary : T.cardBorder}`, transition: "all .15s" }}>
-                    <input
-                      type="radio"
-                      name="typeFilter"
-                      checked={typeFilter === type}
-                      onChange={() => setTypeFilter(type)}
-                      style={{ cursor: "pointer" }}
-                    />
-                    <span style={{ fontSize: 13, fontWeight: typeFilter === type ? 600 : 400, color: typeFilter === type ? T.primary : T.textMain }}>
+                  <label key={type} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "5px 10px", borderRadius: 6, background: typeFilter === type ? T.primaryLight : "transparent", transition: "all .12s" }}>
+                    <input type="radio" name="vendorType" checked={typeFilter === type} onChange={() => setTypeFilter(type)} style={{ cursor: "pointer", accentColor: T.primary }} />
+                    <span style={{ fontSize: 12.5, fontWeight: typeFilter === type ? 600 : 400, color: typeFilter === type ? T.primary : T.textMain }}>
                       {type === "all" ? "All Types" : type}
+                      {type !== "all" && <span style={{ opacity: 0.6, marginLeft: 4 }}>({MOCK_VENDORS.filter((v) => v.type === type).length})</span>}
                     </span>
                   </label>
                 ))}
@@ -2198,524 +2396,6 @@ function VRFPage({ prf, onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  PRF APPROVAL PAGE (List View)
-// ═══════════════════════════════════════════════════════════════════════════════
-function PRFApprovalPage({ approvalPrfs, onSelectApproval, onUpdateApprovalPrf }) {
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [showMatrix, setShowMatrix] = useState(false);
-
-  const filtered = filterStatus === "all" ? approvalPrfs : approvalPrfs.filter((p) => p.status === filterStatus);
-
-  const stats = [
-    { label: "Total PRFs", value: approvalPrfs.length, icon: "prfs", color: "#60a5fa", bg: "#dbeafe" },
-    { label: "Pending Approval", value: approvalPrfs.filter((p) => p.status === "awaiting_approval").length, icon: "clock", color: "#f59e0b", bg: "#fef3c7" },
-    { label: "Approved", value: approvalPrfs.filter((p) => p.status === "approved").length, icon: "check", color: "#16a34a", bg: "#dcfce7" },
-    { label: "Rejected", value: approvalPrfs.filter((p) => p.status === "rejected").length, icon: "x", color: "#ef4444", bg: "#fee2e2" },
-  ];
-
-  const statusFilters = [
-    { key: "all", label: "All" },
-    { key: "awaiting_approval", label: "Pending" },
-    { key: "approved", label: "Approved" },
-    { key: "rejected", label: "Rejected" },
-    { key: "commented", label: "Commented" },
-  ];
-
-  return (
-    <div>
-      {/* Stat cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 20 }}>
-        {stats.map((s) => (
-          <Card key={s.label} style={{ padding: 18 }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px" }}>{s.label}</div>
-                <div style={{ fontSize: 26, fontWeight: 800, color: T.textMain, marginTop: 4 }}>{s.value}</div>
-              </div>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon name={s.icon} size={20} color={s.color} />
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Filter bar + Approval Matrix toggle */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, gap: 12, flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {statusFilters.map((f) => (
-            <button key={f.key} onClick={() => setFilterStatus(f.key)} style={{ background: filterStatus === f.key ? T.primary : "#fff", color: filterStatus === f.key ? "#fff" : T.textSub, border: `1px solid ${filterStatus === f.key ? T.primary : T.cardBorder}`, borderRadius: 7, padding: "6px 14px", fontSize: 13, fontWeight: filterStatus === f.key ? 600 : 500, cursor: "pointer", transition: "all .15s" }}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-        <button onClick={() => setShowMatrix(!showMatrix)} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: showMatrix ? T.primary : "#fff", color: showMatrix ? "#fff" : T.primary, border: `1px solid ${T.primary}`, borderRadius: 7, padding: "7px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s" }}>
-          <Icon name="shield" size={16} color={showMatrix ? "#fff" : T.primary} />
-          Approval Matrix {showMatrix ? "▲" : "▼"}
-        </button>
-      </div>
-
-      {/* Approval Matrix Reference */}
-      {showMatrix && (
-        <Card style={{ marginBottom: 18, background: "#f7fafd" }}>
-          <CardHeader icon="shield" title="Approval Matrix" />
-          <div style={{ padding: "0 20px 18px" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr style={{ background: T.bg }}>
-                  <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}` }}>PRF Amount</th>
-                  <th style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}` }}>Required Approvals</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Up to ₹1,00,000", "BU Head → Head of Finance"],
-                  ["₹1,00,001 to ₹10,00,000", "BU Head → Head of Finance → COO"],
-                  ["Above ₹10,00,000", "BU Head → Head of Finance → COO → CEO"],
-                ].map(([amount, chain], i) => (
-                  <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#fafbfc", borderBottom: `1px solid ${T.cardBorder}` }}>
-                    <td style={{ padding: "11px 16px", fontWeight: 600, color: T.textMain }}>{amount}</td>
-                    <td style={{ padding: "11px 16px", color: T.textMain }}>
-                      {chain.split(" → ").map((step, j, arr) => (
-                        <span key={j}>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, background: T.primaryLight, padding: "2px 8px", borderRadius: 4, fontSize: 12, fontWeight: 600, color: T.primary }}>{step}</span>
-                          {j < arr.length - 1 && <Icon name="arrow_right" size={14} color={T.textSub} style={{ display: "inline", verticalAlign: "middle", margin: "0 4px" }} />}
-                        </span>
-                      ))}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* BU Heads reference */}
-            <div style={{ marginTop: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: T.textMain, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                <Icon name="vendors" size={14} color={T.primary} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                BU Owners (First Approvers)
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                {BU_OWNERS.map((b) => (
-                  <div key={b.bu} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", borderRadius: 6, border: `1px solid ${T.cardBorder}`, background: "#fff", fontSize: 12 }}>
-                    <span style={{ color: T.textSub, fontWeight: 500 }}>{b.bu}</span>
-                    <span style={{ color: T.textMain, fontWeight: 600 }}>{b.owner}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      {/* PRF Approval Table */}
-      <Card>
-        <CardHeader icon="shield" title="PRF Approval Requests" action={
-          <span style={{ fontSize: 12, color: T.textSub }}>{filtered.length} request{filtered.length !== 1 ? "s" : ""}</span>
-        } />
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: T.bg }}>
-                {["PRF ID", "Requester", "BU", "Amount", "Current Approver", "Status", "Submitted", "Action"].map((h) => (
-                  <th key={h} style={{ textAlign: "left", padding: "10px 16px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}`, whiteSpace: "nowrap" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((prf, i) => {
-                const statusInfo = APPROVAL_STATUS_MAP[prf.status];
-                return (
-                  <tr key={prf.id}
-                    style={{ background: i % 2 === 0 ? "#fff" : "#fafbfc", borderBottom: `1px solid ${T.cardBorder}`, transition: "background .12s" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f0f7ff")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafbfc")}>
-                    <td style={{ padding: "11px 16px", fontWeight: 700, color: T.primary, whiteSpace: "nowrap" }}>{prf.id}</td>
-                    <td style={{ padding: "11px 16px", color: T.textMain, fontWeight: 500 }}>{prf.requester}</td>
-                    <td style={{ padding: "11px 16px", color: T.textSub, fontSize: 12 }}>{prf.bu}</td>
-                    <td style={{ padding: "11px 16px", color: T.textMain, fontWeight: 600, whiteSpace: "nowrap" }}>{rupee(prf.amount)}</td>
-                    <td style={{ padding: "11px 16px", color: prf.currentApprover ? T.textMain : T.textSub, fontWeight: 500 }}>
-                      {prf.currentApprover || "—"}
-                    </td>
-                    <td style={{ padding: "11px 16px" }}>
-                      <span style={{ fontSize: 11.5, fontWeight: 600, color: statusInfo?.color, background: statusInfo?.bg, padding: "3px 10px", borderRadius: 12, whiteSpace: "nowrap" }}>
-                        {statusInfo?.label}
-                      </span>
-                    </td>
-                    <td style={{ padding: "11px 16px", color: T.textSub, fontSize: 12, whiteSpace: "nowrap" }}>{fmt(prf.submittedAt)}</td>
-                    <td style={{ padding: "11px 16px" }}>
-                      <button onClick={() => onSelectApproval(prf)} style={{ background: T.primaryLight, color: T.primary, border: `1px solid ${T.primary}22`, borderRadius: 6, padding: "4px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                        <Icon name="eye" size={13} color={T.primary} /> View
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-//  PRF APPROVAL DETAIL PAGE
-// ═══════════════════════════════════════════════════════════════════════════════
-function PRFApprovalDetail({ prf, onBack, onUpdateApprovalPrf }) {
-  const [showModal, setShowModal] = useState(null); // 'approve' | 'reject' | 'comment'
-  const [remarks, setRemarks] = useState("");
-  const chain = getApprovalChain(prf.amount);
-  const statusInfo = APPROVAL_STATUS_MAP[prf.status];
-
-  const handleAction = (action) => {
-    const now = new Date().toISOString();
-    let updated = { ...prf, approvals: prf.approvals.map((a) => ({ ...a })) };
-
-    if (action === "approve") {
-      // Find current pending step and approve it
-      const pendingIdx = updated.approvals.findIndex((a) => a.status === "pending" || a.status === "commented");
-      if (pendingIdx !== -1) {
-        updated.approvals[pendingIdx] = { ...updated.approvals[pendingIdx], status: "approved", at: now, remarks: remarks || "Approved." };
-      }
-      // Check if more approvals needed
-      const nextRole = chain[pendingIdx + 1];
-      if (nextRole && pendingIdx + 1 < chain.length) {
-        // Add next approver
-        const nextApprover = nextRole === "Head of Finance" ? APPROVERS.hof : nextRole === "COO" ? APPROVERS.coo : nextRole === "CEO" ? APPROVERS.ceo : { name: "Unknown", role: nextRole };
-        updated.approvals.push({ role: nextRole, name: nextApprover.name, status: "pending", at: null, remarks: null });
-        updated.currentApprover = nextRole;
-        updated.status = "awaiting_approval";
-      } else {
-        // All approved
-        updated.currentApprover = null;
-        updated.status = "approved";
-      }
-    } else if (action === "reject") {
-      const pendingIdx = updated.approvals.findIndex((a) => a.status === "pending" || a.status === "commented");
-      if (pendingIdx !== -1) {
-        updated.approvals[pendingIdx] = { ...updated.approvals[pendingIdx], status: "rejected", at: now, remarks: remarks };
-      }
-      updated.currentApprover = null;
-      updated.status = "rejected";
-    } else if (action === "comment") {
-      const pendingIdx = updated.approvals.findIndex((a) => a.status === "pending" || a.status === "commented");
-      if (pendingIdx !== -1) {
-        updated.approvals[pendingIdx] = { ...updated.approvals[pendingIdx], status: "commented", at: now, remarks: remarks };
-      }
-      updated.status = "commented";
-    }
-
-    onUpdateApprovalPrf(updated);
-    setShowModal(null);
-    setRemarks("");
-  };
-
-  const isTerminal = prf.status === "approved" || prf.status === "rejected";
-
-  return (
-    <div>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-        <button onClick={onBack} style={{ background: "none", border: `1px solid ${T.cardBorder}`, borderRadius: 7, padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: T.textSub, fontSize: 13 }}>
-          <Icon name="arrow_left" size={15} color={T.textSub} /> Back
-        </button>
-        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: T.textMain }}>PRF Approval – {prf.id}</h2>
-        <span style={{ fontSize: 11.5, fontWeight: 600, color: statusInfo?.color, background: statusInfo?.bg, padding: "3px 12px", borderRadius: 12, marginLeft: 8 }}>
-          {statusInfo?.label}
-        </span>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 18, alignItems: "start" }}>
-        {/* Left column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          {/* PRF Summary */}
-          <Card>
-            <CardHeader icon="prfs" title="PRF Summary" />
-            <div style={{ padding: "0 20px 18px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
-                {[
-                  ["PRF ID", prf.id],
-                  ["Requester", prf.requester],
-                  ["Business Unit", prf.bu],
-                  ["BU Head", prf.buHead],
-                  ["Amount", rupee(prf.amount)],
-                  ["Submitted On", fmtTime(prf.submittedAt)],
-                ].map(([label, val]) => (
-                  <div key={label}>
-                    <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>{label}</div>
-                    <div style={{ fontSize: 13.5, color: T.textMain, fontWeight: label === "Amount" ? 700 : 500 }}>{val}</div>
-                  </div>
-                ))}
-                <div style={{ gridColumn: "1/-1" }}>
-                  <div style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>Purpose</div>
-                  <div style={{ fontSize: 13.5, color: T.textMain, fontWeight: 500 }}>{prf.purpose}</div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* Approval Progress Stepper */}
-          <Card>
-            <CardHeader icon="shield" title="Approval Progress" action={
-              <span style={{ fontSize: 11, color: T.textSub }}>
-                {prf.amount <= 100000 ? "Up to ₹1L" : prf.amount <= 1000000 ? "₹1L – ₹10L" : "Above ₹10L"} threshold
-              </span>
-            } />
-            <div style={{ padding: "4px 20px 22px" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 0 }}>
-                {chain.map((role, i) => {
-                  const approval = prf.approvals.find((a) => a.role === role);
-                  const s = approval?.status || "future";
-                  const isLast = i === chain.length - 1;
-                  const stepColor = s === "approved" ? "#16a34a" : s === "rejected" ? "#ef4444" : s === "commented" ? "#8b5cf6" : s === "pending" ? "#f59e0b" : "#cbd5e1";
-                  const stepBg = s === "approved" ? "#dcfce7" : s === "rejected" ? "#fee2e2" : s === "commented" ? "#ede9fe" : s === "pending" ? "#fef3c7" : "#f1f5f9";
-                  const stepIcon = s === "approved" ? "check" : s === "rejected" ? "x" : s === "commented" ? "message_square" : s === "pending" ? "clock" : "user";
-
-                  return (
-                    <div key={role} style={{ display: "flex", alignItems: "flex-start", flex: isLast ? "0 0 auto" : 1 }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 80 }}>
-                        {/* Circle */}
-                        <div style={{
-                          width: 40, height: 40, borderRadius: "50%", background: stepBg, border: `3px solid ${stepColor}`,
-                          display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
-                          boxShadow: s === "pending" ? `0 0 0 4px ${stepColor}22` : "none",
-                          animation: s === "pending" ? "none" : "none",
-                        }}>
-                          <Icon name={stepIcon} size={18} color={stepColor} />
-                        </div>
-                        {/* Label */}
-                        <div style={{ fontSize: 11, fontWeight: 700, color: stepColor, marginTop: 6, textAlign: "center" }}>{role}</div>
-                        {/* Name */}
-                        <div style={{ fontSize: 10.5, color: T.textSub, textAlign: "center", marginTop: 2 }}>{approval?.name || "—"}</div>
-                        {/* Status label */}
-                        <div style={{ fontSize: 9.5, fontWeight: 600, color: stepColor, background: stepBg, padding: "1px 6px", borderRadius: 4, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.3px" }}>
-                          {s === "future" ? "Upcoming" : s === "pending" ? "Pending" : s === "approved" ? "Done" : s === "rejected" ? "Rejected" : "Commented"}
-                        </div>
-                      </div>
-                      {/* Connector line */}
-                      {!isLast && (
-                        <div style={{ flex: 1, display: "flex", alignItems: "center", paddingTop: 18 }}>
-                          <div style={{
-                            flex: 1, height: 3, borderRadius: 2,
-                            background: (s === "approved") ? "#16a34a" : `linear-gradient(90deg, ${stepColor} 0%, #e2e8f0 100%)`,
-                          }} />
-                          <Icon name="arrow_right" size={14} color={s === "approved" ? "#16a34a" : "#cbd5e1"} style={{ flexShrink: 0 }} />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Card>
-
-          {/* Approval Details Table */}
-          <Card>
-            <CardHeader icon="clock" title="Approval Actions Log" />
-            <div style={{ padding: "0 20px 18px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: T.bg }}>
-                    {["Approver", "Role", "Status", "Date", "Remarks"].map((h) => (
-                      <th key={h} style={{ textAlign: "left", padding: "8px 12px", fontSize: 11, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${T.cardBorder}` }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {prf.approvals.map((a, i) => {
-                    const sColor = a.status === "approved" ? "#16a34a" : a.status === "rejected" ? "#ef4444" : a.status === "commented" ? "#8b5cf6" : "#f59e0b";
-                    const sBg = a.status === "approved" ? "#dcfce7" : a.status === "rejected" ? "#fee2e2" : a.status === "commented" ? "#ede9fe" : "#fef3c7";
-                    return (
-                      <tr key={i} style={{ borderBottom: `1px solid ${T.cardBorder}` }}>
-                        <td style={{ padding: "10px 12px", fontWeight: 600, color: T.textMain }}>{a.name}</td>
-                        <td style={{ padding: "10px 12px", color: T.textSub }}>{a.role}</td>
-                        <td style={{ padding: "10px 12px" }}>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: sColor, background: sBg, padding: "2px 8px", borderRadius: 10, textTransform: "capitalize" }}>{a.status}</span>
-                        </td>
-                        <td style={{ padding: "10px 12px", color: T.textSub, fontSize: 12 }}>{a.at ? fmtTime(a.at) : "—"}</td>
-                        <td style={{ padding: "10px 12px", color: T.textMain, fontSize: 12, maxWidth: 220, wordBreak: "break-word" }}>{a.remarks || "—"}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </Card>
-        </div>
-
-        {/* Right column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          {/* Action Panel */}
-          <Card>
-            <CardHeader icon="shield" title="Action Panel" />
-            <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
-              {!isTerminal ? (
-                <>
-                  <div style={{ background: "#fef3c7", border: "1px solid #fcd34d", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", display: "flex", alignItems: "flex-start", gap: 8 }}>
-                    <Icon name="clock" size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: 1 }} />
-                    <div>
-                      <div style={{ fontWeight: 700 }}>Awaiting action from:</div>
-                      <div style={{ fontWeight: 600, marginTop: 2 }}>{prf.currentApprover}</div>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button onClick={() => setShowModal("approve")} style={{ flex: 1, background: "#16a34a", color: "#fff", border: "none", borderRadius: 7, padding: "10px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                      <Icon name="check" size={15} color="#fff" /> Approve
-                    </button>
-                    <button onClick={() => setShowModal("reject")} style={{ flex: 1, background: "#fff", color: "#ef4444", border: "1px solid #ef4444", borderRadius: 7, padding: "10px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                      <Icon name="x" size={15} color="#ef4444" /> Reject
-                    </button>
-                  </div>
-                  <button onClick={() => setShowModal("comment")} style={{ background: "#fff", color: "#8b5cf6", border: "1px solid #8b5cf6", borderRadius: 7, padding: "9px 0", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                    <Icon name="message_square" size={15} color="#8b5cf6" /> Add Comment
-                  </button>
-                </>
-              ) : (
-                <div style={{ padding: "16px 0", textAlign: "center" }}>
-                  <div style={{
-                    width: 48, height: 48, borderRadius: "50%", margin: "0 auto 10px",
-                    background: prf.status === "approved" ? "#dcfce7" : "#fee2e2",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <Icon name={prf.status === "approved" ? "check" : "x"} size={24} color={prf.status === "approved" ? "#16a34a" : "#ef4444"} />
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: prf.status === "approved" ? "#16a34a" : "#ef4444" }}>
-                    {prf.status === "approved" ? "PRF Approved" : "PRF Rejected"}
-                  </div>
-                  <div style={{ fontSize: 12, color: T.textSub, marginTop: 4 }}>
-                    {prf.status === "approved"
-                      ? "This PRF has been fully approved. Final notification sent to Requester, all Approvers, and Aryan (Finance)."
-                      : "This PRF was rejected. Requester has been notified via email."
-                    }
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* Notification Summary */}
-          {prf.status === "approved" && (
-            <Card>
-              <CardHeader icon="mail" title="Email Notifications Sent" />
-              <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
-                {[
-                  { to: prf.requester, type: "Requester", desc: "Final approval confirmation" },
-                  ...prf.approvals.filter(a => a.status === "approved").map(a => ({ to: a.name, type: a.role, desc: "Approval cycle complete" })),
-                  { to: APPROVERS.finance.name, type: "Finance", desc: "Approved PRF for PO creation" },
-                ].map((n, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 6, border: `1px solid ${T.cardBorder}`, background: T.bg, fontSize: 12 }}>
-                    <Icon name="send" size={13} color="#16a34a" />
-                    <div style={{ flex: 1 }}>
-                      <span style={{ fontWeight: 600, color: T.textMain }}>{n.to}</span>
-                      <span style={{ color: T.textSub }}> ({n.type})</span>
-                    </div>
-                    <span style={{ color: "#16a34a", fontSize: 11, fontWeight: 600 }}>✓ Sent</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Documents */}
-          <Card>
-            <CardHeader icon="documents" title="Documents" />
-            <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
-              {prf.docs.map((doc, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 7, border: `1px solid ${T.cardBorder}`, background: T.bg }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Icon name="file_text" size={16} color={doc.type === "prf" ? T.primary : T.accent} />
-                    <div>
-                      <span style={{ fontSize: 13, color: T.textMain, fontWeight: 500 }}>{doc.name}</span>
-                      <div style={{ fontSize: 10.5, color: T.textSub }}>{fmtTime(doc.uploadedAt)}</div>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}><Icon name="eye" size={15} color={T.textSub} /></button>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}><Icon name="download" size={15} color={T.textSub} /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Audit Trail */}
-          <Card>
-            <CardHeader icon="clock" title="Audit Trail" />
-            <div style={{ padding: "0 20px 18px" }}>
-              <div style={{ fontSize: 12, color: T.textMain, lineHeight: 1.7, background: T.bg, padding: "10px 14px", borderRadius: 7, border: `1px solid ${T.cardBorder}`, fontFamily: "monospace" }}>
-                {prf.approvals.filter(a => a.status === "approved").length > 0 && (
-                  <div><strong>Approved by:</strong> {prf.approvals.filter(a => a.status === "approved").map(a => `${a.name} (${a.role})`).join(", ")}</div>
-                )}
-                {prf.approvals.filter(a => a.status === "pending").length > 0 && (
-                  <div><strong>Pending approval from:</strong> {prf.approvals.filter(a => a.status === "pending").map(a => `${a.name} (${a.role})`).join(", ")}</div>
-                )}
-                {prf.approvals.filter(a => a.status === "rejected").length > 0 && (
-                  <div><strong>Rejected by:</strong> {prf.approvals.filter(a => a.status === "rejected").map(a => `${a.name} (${a.role})`).join(", ")}</div>
-                )}
-                {prf.approvals.filter(a => a.status === "commented").length > 0 && (
-                  <div><strong>Commented by:</strong> {prf.approvals.filter(a => a.status === "commented").map(a => `${a.name} (${a.role})`).join(", ")}</div>
-                )}
-                <div style={{ marginTop: 6 }}><strong>Status:</strong> <span style={{ color: statusInfo?.color, fontWeight: 700 }}>{statusInfo?.label}</span></div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Modals */}
-      {showModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
-          <div style={{ background: "#fff", borderRadius: 12, width: 440, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,.2)" }}>
-            <h3 style={{ margin: "0 0 6px", fontSize: 17, color: T.textMain }}>
-              {showModal === "approve" ? "Approve PRF" : showModal === "reject" ? "Reject PRF" : "Add Comment"}
-            </h3>
-            <p style={{ margin: "0 0 14px", fontSize: 13, color: T.textSub }}>
-              {showModal === "approve"
-                ? `This will approve the PRF as ${prf.currentApprover}. The workflow will move to the next approver if required.`
-                : showModal === "reject"
-                  ? "This will reject the PRF. The requester will be notified via email and the workflow will terminate."
-                  : "Your comment will be emailed to the requester. The PRF will remain pending until approved or rejected."
-              }
-            </p>
-            <div style={{ marginBottom: 12 }}>
-              <label style={{ fontSize: 11, color: T.textSub, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px" }}>
-                {showModal === "comment" ? "Comment" : "Remarks"} {(showModal === "reject" || showModal === "comment") && <span style={{ color: "#ef4444" }}>*</span>}
-              </label>
-              <textarea
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                placeholder={showModal === "approve" ? "Optional remarks" : showModal === "reject" ? "Reason for rejection (mandatory)" : "Your comment (mandatory)"}
-                rows={3}
-                style={{ width: "100%", marginTop: 5, padding: "8px 10px", border: `1px solid ${T.cardBorder}`, borderRadius: 7, fontSize: 13, resize: "vertical", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }}
-              />
-            </div>
-            {(showModal === "reject" || showModal === "comment") && !remarks.trim() && (
-              <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 7, padding: "8px 12px", fontSize: 12.5, color: "#92400e", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
-                <Icon name="alert" size={14} color="#92400e" /> {showModal === "reject" ? "Remarks are mandatory for rejection." : "Comment is mandatory."}
-              </div>
-            )}
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 18 }}>
-              <button onClick={() => { setShowModal(null); setRemarks(""); }} style={{ background: "#f3f4f6", border: "none", borderRadius: 7, padding: "8px 18px", fontSize: 13, cursor: "pointer", color: T.textSub }}>Cancel</button>
-              <button
-                onClick={() => handleAction(showModal)}
-                disabled={(showModal === "reject" || showModal === "comment") && !remarks.trim()}
-                style={{
-                  background: showModal === "approve" ? "#16a34a" : showModal === "reject" ? "#ef4444" : "#8b5cf6",
-                  color: "#fff", border: "none", borderRadius: 7, padding: "8px 20px", fontSize: 13, fontWeight: 600,
-                  cursor: ((showModal === "reject" || showModal === "comment") && !remarks.trim()) ? "not-allowed" : "pointer",
-                  opacity: ((showModal === "reject" || showModal === "comment") && !remarks.trim()) ? 0.5 : 1,
-                }}>
-                {showModal === "approve" ? "Confirm Approval" : showModal === "reject" ? "Confirm Rejection" : "Submit Comment"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
 //  ROOT APP
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
@@ -2725,29 +2405,20 @@ export default function App() {
   const [vrfPrf, setVrfPrf] = useState(null);
   const [prfs, setPrfs] = useState(MOCK_PRFS);
   const [vendors, setVendors] = useState(MOCK_VENDORS);
-  const [approvalPrfs, setApprovalPrfs] = useState(MOCK_APPROVAL_PRFS);
-  const [selectedApproval, setSelectedApproval] = useState(null);
 
-  const pageTitle = { prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders", approvals: "PRF Approvals" };
+  const pageTitle = { prfs: "PRFs", vendors: "Vendors", orders: "Purchase Orders" };
 
   const handleVendorUpdate = (updatedVendor) => {
     setVendors((prev) => prev.map((v) => (v.name === updatedVendor.name ? updatedVendor : v)));
     setSelectedVendor(updatedVendor);
   };
 
-  const handleApprovalPrfUpdate = (updated) => {
-    setApprovalPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-    setSelectedApproval(updated);
-  };
-
   const renderContent = () => {
     if (vrfPrf) return <VRFPage prf={vrfPrf} onBack={() => setVrfPrf(null)} />;
     if (selectedVendor) return <VendorDetail vendor={selectedVendor} onBack={() => setSelectedVendor(null)} onUpdateVendor={handleVendorUpdate} />;
-    if (selectedApproval) return <PRFApprovalDetail prf={selectedApproval} onBack={() => setSelectedApproval(null)} onUpdateApprovalPrf={handleApprovalPrfUpdate} />;
     if (selectedPrf) return <PRFDetail prf={selectedPrf} onBack={() => setSelectedPrf(null)} onUpdatePrf={(updated) => { setPrfs((prev) => prev.map((p) => (p.id === updated.id ? updated : p))); setSelectedPrf(updated); }} onViewVendor={(name) => { const v = vendors.find(v => v.name === name); if (v) { setSelectedVendor(v); setSelectedPrf(null); } }} />;
     switch (page) {
       case "prfs": return <PRFsPage prfs={prfs} onSelectPrf={setSelectedPrf} />;
-      case "approvals": return <PRFApprovalPage approvalPrfs={approvalPrfs} onSelectApproval={setSelectedApproval} onUpdateApprovalPrf={handleApprovalPrfUpdate} />;
       case "vendors": return <VendorsPage onSelectVendor={setSelectedVendor} />;
       case "orders": return <PurchaseOrdersPage prfs={prfs} />;
       default: return null;
@@ -2760,28 +2431,13 @@ export default function App() {
     // Don't auto-navigate; user can click into it
   }, [prfs]);
 
-  const getActiveSidebar = () => {
-    if (vrfPrf || selectedVendor) return "vendors";
-    if (selectedApproval) return "approvals";
-    if (selectedPrf) return "prfs";
-    return page;
-  };
-
-  const getTitle = () => {
-    if (vrfPrf) return "VRF / VIF Submission";
-    if (selectedVendor) return `Vendor Detail – ${selectedVendor.name}`;
-    if (selectedApproval) return `PRF Approval – ${selectedApproval.id}`;
-    if (selectedPrf) return `PRF Detail – ${selectedPrf.id}`;
-    return pageTitle[page];
-  };
-
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", background: T.bg, minHeight: "100vh", display: "flex" }}>
-      <Sidebar active={getActiveSidebar()} onNav={(key) => { setPage(key); setSelectedPrf(null); setVrfPrf(null); setSelectedVendor(null); setSelectedApproval(null); }} />
+      <Sidebar active={selectedPrf || vrfPrf || selectedVendor ? (vrfPrf ? "vendors" : selectedVendor ? "vendors" : "prfs") : page} onNav={(key) => { setPage(key); setSelectedPrf(null); setVrfPrf(null); setSelectedVendor(null); }} />
       <div style={{ flex: 1, marginLeft: T.sidebarW }}>
         <TopBar
-          title={getTitle()}
-          showSearch={!selectedPrf && !selectedVendor && !vrfPrf && !selectedApproval}
+          title={vrfPrf ? "VRF / VIF Submission" : selectedVendor ? `Vendor Detail – ${selectedVendor.name}` : selectedPrf ? `PRF Detail – ${selectedPrf.id}` : pageTitle[page]}
+          showSearch={!selectedPrf && !selectedVendor && !vrfPrf}
         />
         <main style={{ padding: "24px 28px", paddingTop: T.headerH + 24 }}>
           {renderContent()}
@@ -2790,3 +2446,4 @@ export default function App() {
     </div>
   );
 }
+
